@@ -1,1 +1,2 @@
-Botonera que consiste ubicado en cada mesa  para llamar al mozo y no tener que levantar la mano o esperar a que pase por la mesa.
+Va a tener un sistema para diseñar y crear mesas, y luego que sea operable. 
+a eso se le va a sumar que click en cada mesa y un mas te deja agregar lo que piden. 3 estados en las mesas, verde, ocupado, rojo llamando al mozo, y gris vacio. Ademas va a haber una pantalla para controlar los llamados, que la va a ver el encargado para avisar, y la otra pantalla la gestionan los mozos. Ademas en un futuro se conectara si se llega a implementar, a la cocina por lo que cuando el mozo agrega un plato en la comanda le llega a la cocina, con un boton para no llamar como las bebidas o helados.
