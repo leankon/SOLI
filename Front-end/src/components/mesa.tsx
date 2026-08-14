@@ -16,8 +16,8 @@ export default function Mesa({ mesa }: Props) {
       style={{
         left: mesa.x,
         top: mesa.y,
-        width: TAMAÑO_MESA,
-        height: TAMAÑO_MESA,
+        width: mesa.tamaño,
+        height: mesa.tamaño,
       }}
     >
       {mesa.numero}
