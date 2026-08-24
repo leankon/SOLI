@@ -30,3 +30,13 @@
     font-size: 16px;
     cursor: pointer;
   }
+  /* el plano es la caja donde van las mesas.
+   position relative para que el left/top de cada mesa sea desde aca
+   y no desde la esquina de la pantalla */
+.plano {
+  position: relative;
+  width: 1200px;
+  height: 620px;
+  border: 1px solid var(--borde);
+  background: var(--fondo);
+}
