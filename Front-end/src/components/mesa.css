@@ -1,14 +1,23 @@
 .mesa {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid #999999;
-    font-size: 18px;
-    font-family: inherit;
-  }
- 
-  .mesa-circular { border-radius: 50%; }
-  .mesa-vacia    { background: var(--gris); }
-  .mesa-ocupada  { background: var(--verde); }
-  .mesa-llamando { background: var(--rojo); }
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #999999;
+  font-size: 18px;
+  font-family: inherit;
+  color: var(--texto);
+  /* estas dos son para apagar los estilos que traen por default */
+  padding: 0;
+  cursor: pointer;
+}
+
+.mesa-circular { border-radius: 50%; }
+.mesa-vacia    { background: var(--gris); }
+.mesa-ocupada  { background: var(--verde); }
+.mesa-llamando { background: var(--rojo); }
+
+.mesa:hover {
+  border-color: var(--texto);
+  border-width: 3px;
+}
