@@ -2,20 +2,20 @@ import express from "express";
 const app = express();
 const port = 3000;
 
-import artistas from "./controllers/mesa.js";
-import albumes from "./controllers/platos.js";
-import canciones from "./controllers/pide.js";
-import canciones from "./controllers/solicitud.js";
-import canciones from "./controllers/pide.js";
+import mesas from "./controllers/mesa.js";
+import platos from "./controllers/platos.js";
+import pedidos from "./controllers/pide.js";
+import solicitudes from "./controllers/solicitud.js";
+import usuarios from "./controllers/usuario.js";
 
 app.use(express.json());
 
 app.get("/", (_, res) => {
-  res.send("SpoTICfy API working!");
+  res.send("SOLI API working!");
 });
 
 const server = app.listen(port, () => {
-  console.log(`SpoTICfy API listening at http://localhost:${port}`);
+  console.log(` API SOLI listening at http://localhost:${port}`);
 });
 
 export { app, server };
