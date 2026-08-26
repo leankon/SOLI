@@ -23,3 +23,9 @@ export type Llamado = {
   // el texto lo arma el componente cuando aparece
   haceMinutos: number
 }
+
+export type Plato = {
+  id: number
+  nombre: string
+  precio: number
+}
