@@ -1,0 +1,75 @@
+.fondo-oscuro {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .popup {
+    background: var(--fondo);
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    padding: 24px;
+    width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .popup-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .popup-header h2 {
+    margin: 0;
+    font-size: 22px;
+  }
+  
+  /* el ✕ se va solo a la derecha */
+  .cerrar {
+    margin-left: auto;
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #737373;
+    padding: 0;
+  }
+  
+  .chip {
+    font-size: 13px;
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+  .chip-vacia    { background: var(--gris); }
+  .chip-ocupada  { background: var(--verde); }
+  .chip-llamando { background: var(--rojo); }
+  
+  .ayuda {
+    margin: 0;
+    font-size: 14px;
+    color: #737373;
+  }
+  
+  .boton-principal,
+  .boton-peligro {
+    padding: 14px;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .boton-principal {
+    background: var(--texto);
+    color: #ffffff;
+    border: none;
+    font-weight: bold;
+  }
+  
+  .boton-peligro {
+    background: var(--fondo);
+    color: var(--rojo);
+    border: 1px solid var(--rojo);
+  }

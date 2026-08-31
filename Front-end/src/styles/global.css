@@ -40,3 +40,18 @@
   border: 1px solid var(--borde);
   background: var(--fondo);
 }
+/* la barra de arriba. flex pone los links en fila y gap los separa,
+   asi no quedan pegados uno atras del otro */
+   nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 0 0 16px 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--borde);
+  }
+  
+  nav a {
+    color: var(--texto);
+    text-decoration: none;
+  }

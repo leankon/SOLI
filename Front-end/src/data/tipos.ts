@@ -29,3 +29,13 @@ export type Plato = {
   nombre: string
   precio: number
 }
+export type Rol = 'mozo' | 'encargado'
+
+// el email no esta aca: es el mismo para todo el restaurante.
+// lo que distingue a una persona de otro es la contraseña
+export type Usuario = {
+  id: number
+  nombre: string
+  rol: Rol
+  password: string
+}
