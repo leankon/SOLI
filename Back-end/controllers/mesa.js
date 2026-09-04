@@ -26,10 +26,11 @@ const getMesa = async (req, res) => {
 
 const createMesa = async (req, res) => {
   try {
-    const { estado, numero } = req.body;
+    const { numero, estado, x, y, tamano, forma } = req.body;
     const result = await pool.query(
-      "INSERT INTO mesa (estado, numero) VALUES ($1, $2) RETURNING *",
-      [estado, numero]
+      `INSERT INTO mesa (numero, estado, x, y, tamano, forma)
+       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+      [numero, estado, x, y, tamano, forma]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -41,10 +42,11 @@ const createMesa = async (req, res) => {
 const updateMesa = async (req, res) => {
   try {
     const { id } = req.params;
-    const { estado, numero } = req.body;
+    const { numero, estado, x, y, tamano, forma } = req.body;
     const result = await pool.query(
-      "UPDATE mesa SET estado = $1, numero = $2 WHERE id = $3 RETURNING *",
-      [estado, numero, id]
+      `UPDATE mesa SET numero = $1, estado = $2, x = $3, y = $4, tamano = $5, forma = $6
+       WHERE id = $7 RETURNING *`,
+      [numero, estado, x, y, tamano, forma, id]
     );
     if (result.rows.length === 0) {
       return res.status(404).json({ error: "Mesa no encontrada" });
