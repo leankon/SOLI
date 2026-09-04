@@ -19,7 +19,7 @@ export default function Login({ setRol }: Props) {
       return
     }
 
-    // esto lo va a hacer el back: buscar de quien es esa contraseña
+    // esto lo va a hacer el back buscar de quien es esa contraseña
     const usuario = usuarios.find((u) => u.password === password)
 
     if (email !== EMAIL_RESTAURANTE || usuario === undefined) {
