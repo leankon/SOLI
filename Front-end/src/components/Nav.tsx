@@ -20,6 +20,7 @@ export default function Nav({ rol, onSalir }: Props) {
           <Link to="/encargado">Llamados</Link>
           <Link to="/plano">Editor plano</Link>
           <Link to="/catalogo">Catalogo</Link>
+          <Link to="/crear-rol">Crear rol</Link>
         </>
       )}
 

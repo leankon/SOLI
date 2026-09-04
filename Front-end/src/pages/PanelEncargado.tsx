@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { llamados as llamadosIniciales } from '../data/llamados'
-import Llamado from '../components/llamados'
+import Llamado from '../components/Llamados'
 
 export default function PanelEncargado() {
   const [listaLlamados, setListaLlamados] = useState(llamadosIniciales)

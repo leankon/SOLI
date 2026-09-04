@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { mesas as mesasIniciales } from '../data/mesas'
 import type { EstadoMesa } from '../data/tipos'
-import Mesa from '../components/Mesa'
+import Mesa from '../components/mesa'
 import PopUp from '../components/PopUp'
 
 export default function VistaMozo() {
