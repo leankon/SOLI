@@ -5,7 +5,7 @@ export type Mesa = {
   numero: number
   x: number
   y: number
-  tamaño: number
+  tamano: number
   forma: 'circular' | 'cuadrado'
   estado: EstadoMesa
 }

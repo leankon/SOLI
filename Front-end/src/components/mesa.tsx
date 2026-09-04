@@ -18,8 +18,8 @@ export default function Mesa({ mesa, onClick }: Props) {
       style={{
         left: mesa.x,
         top: mesa.y,
-        width: mesa.tamaño,
-        height: mesa.tamaño,
+        width: mesa.tamano,
+        height: mesa.tamano,
       }}
     >
       {mesa.numero}
