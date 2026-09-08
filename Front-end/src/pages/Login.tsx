@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import {useNavigate } from 'react-router-dom'
 import { usuarios } from '../data/usuarios'
 import { EMAIL_RESTAURANTE } from '../data/constantes'
 
@@ -43,8 +43,6 @@ export default function Login({ setRol }: Props) {
       <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
       <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} />
       <button onClick={entrar}>Entrar</button>
-      {error && <p>{error}</p>}
-      <p><Link to="/login-mozo">¿Sos mozo? Entra aca</Link></p>
-    </div>
+      {error && <p>{error}</p>}</div>
   )
 }

@@ -2,7 +2,6 @@ import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Login from './pages/Login'
-import LoginMozo from './pages/LoginMozo'
 import VistaMozo from './pages/VistaMozo'
 import PanelEncargado from './pages/PanelEncargado'
 import EditorPlano from './pages/EditorPlano'
@@ -27,8 +26,6 @@ export default function App() {
       <Routes>
         <Route path="/" element={login} />
         <Route path="/login" element={login} />
-        <Route path="/login-mozo" element={<LoginMozo setRol={setRol} />} />
-
         <Route path="/mozo" element={soloPara('mozo', <VistaMozo />)} />
         <Route path="/encargado" element={soloPara('encargado', <PanelEncargado />)} />
         <Route path="/plano" element={soloPara('encargado', <EditorPlano />)} />
