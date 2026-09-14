@@ -1,4 +1,5 @@
   import express from "express";
+  import cors from "cors";
   const app = express();
   const port = 3000;
 
@@ -8,6 +9,7 @@
   import solicitudes from "./controllers/solicitud.js";
   import usuarios from "./controllers/usuario.js";
 
+  app.use(cors());
   app.use(express.json());
 
   app.get("/", (_, res) => {
