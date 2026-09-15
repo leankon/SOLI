@@ -21,3 +21,8 @@
   border-color: var(--texto);
   border-width: 3px;
 }
+/* la mesa elegida en el editor */
+.mesa.mesa-seleccionada {
+  border-color: #3366cc;
+  border-width: 3px;
+}
