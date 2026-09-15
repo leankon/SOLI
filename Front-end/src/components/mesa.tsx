@@ -8,13 +8,22 @@ type Props = {
   // solo avisa "me tocaron" y manda su id. quien decide es el de arriba.
   onClick: (id: number) => void
   seleccionada?: boolean
+  // esta solo la usa el editor. manda el evento entero porque de ahi
+  // salen las coordenadas del mouse
+  onMouseDown?: (e: React.MouseEvent, mesa: DatosMesa) => void
 }
 
-export default function Mesa({ mesa, onClick, seleccionada }: Props) {
+export default function Mesa({ mesa, onClick, seleccionada, onMouseDown }: Props) {
+  function apretar(e: React.MouseEvent) {
+    // VistaMozo no manda esta funcion, asi que puede no estar
+    if (onMouseDown) onMouseDown(e, mesa)
+  }
+
   return (
     <button
       type="button"
       onClick={() => onClick(mesa.id)}
+      onMouseDown={apretar}
       className={
         'mesa mesa-' + mesa.forma + ' mesa-' + mesa.estado +
         (seleccionada ? ' mesa-seleccionada' : '')
