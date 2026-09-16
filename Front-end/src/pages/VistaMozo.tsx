@@ -1,12 +1,12 @@
-import { useState } from 'react'
-import { mesas as mesasIniciales } from '../data/mesas'
-import type { EstadoMesa } from '../data/tipos'
+import { useState, useEffect } from 'react'
+import type { Mesa as DatosMesa, EstadoMesa } from '../data/tipos'
+import { API } from '../data/constantes'
 import Mesa from '../components/mesa'
 import PopUp from '../components/PopUp'
 
 export default function VistaMozo() {
-  // la lista va en useState porque ahora las mesas cambian de estado
-  const [listaMesas, setListaMesas] = useState(mesasIniciales)
+  const [listaMesas, setListaMesas] = useState<DatosMesa[]>([])
+  const [cargando, setCargando] = useState(true)
 
   // arranca en null porque al principio no hay ninguna mesa elegida.
   const [idSeleccionada, setIdSeleccionada] = useState<number | null>(null)
@@ -18,10 +18,28 @@ export default function VistaMozo() {
   const llamando = listaMesas.filter((m) => m.estado === 'llamando').length
   const vacias = listaMesas.filter((m) => m.estado === 'vacia').length
 
+  useEffect(() => {
+    fetch(API + '/mesas')
+      .then((r) => r.json())
+      .then((datos) => {
+        setListaMesas(datos)
+        setCargando(false)
+      })
+  }, [])
+
   function cambiarEstado(id: number, nuevo: EstadoMesa) {
     // armo una lista nueva: la mesa que toque va copiada con el estado cambiado
     setListaMesas(
       listaMesas.map((m) => (m.id === id ? { ...m, estado: nuevo } : m))
+    )
+  }
+
+  if (cargando) {
+    return (
+      <div>
+        <h1>Vista mozo</h1>
+        <p>Buscando las mesas...</p>
+      </div>
     )
   }
 
@@ -31,9 +49,13 @@ export default function VistaMozo() {
       <p>Ocupadas: {ocupadas} &nbsp;&nbsp; Llamando: {llamando} &nbsp;&nbsp; Vacias: {vacias}</p>
 
       <div className="plano">
-        {listaMesas.map((mesa) => (
-          <Mesa key={mesa.id} mesa={mesa} onClick={setIdSeleccionada} />
-        ))}
+        {listaMesas.length === 0 ? (
+          <p>El salon todavia no tiene mesas. El encargado las carga desde el editor de plano.</p>
+        ) : (
+          listaMesas.map((mesa) => (
+            <Mesa key={mesa.id} mesa={mesa} onClick={setIdSeleccionada} />
+          ))
+        )}
       </div>
 
       {mesaSeleccionada && (

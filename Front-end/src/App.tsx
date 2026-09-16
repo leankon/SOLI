@@ -8,7 +8,7 @@ import EditorPlano from './pages/EditorPlano'
 import Catalogo from './pages/Catalogo'
 import Simulador from './pages/Simulador'
 import Nav from './components/Nav'
-
+import CrearRol from './pages/CrearRol'
 export default function App() {
   const [rol, setRol] = useState('')
 
@@ -30,6 +30,7 @@ export default function App() {
         <Route path="/encargado" element={soloPara('encargado', <PanelEncargado />)} />
         <Route path="/plano" element={soloPara('encargado', <EditorPlano />)} />
         <Route path="/catalogo" element={soloPara('encargado', <Catalogo />)} />
+        <Route path="/crear-rol" element={soloPara('encargado', <CrearRol />)} />
 
         <Route path="/simulador" element={<Simulador />} />
       </Routes>
