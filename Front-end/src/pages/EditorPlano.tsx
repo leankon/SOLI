@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { Mesa as DatosMesa } from '../data/tipos'
-import { mesas as mesasIniciales } from '../data/mesas'
+import { API } from '../data/constantes'
 import Mesa from '../components/mesa'
 
 // el mismo tamano que tiene .plano en el css
@@ -19,12 +19,22 @@ const FORMAS = [
 ] as const
 
 export default function EditorPlano() {
-  const [listaMesas, setListaMesas] = useState(mesasIniciales)
+  const [listaMesas, setListaMesas] = useState<DatosMesa[]>([])
+  const [cargando, setCargando] = useState(true)
   const [idElegida, setIdElegida] = useState<number | null>(null)
   const [idArrastrada, setIdArrastrada] = useState<number | null>(null)
   const [agarre, setAgarre] = useState({ x: 0, y: 0 })
 
   const elegida = listaMesas.find((m) => m.id === idElegida)
+
+  useEffect(() => {
+    fetch(API + '/mesas')
+      .then((r) => r.json())
+      .then((datos) => {
+        setListaMesas(datos)
+        setCargando(false)
+      })
+  }, [])
 
   function agregar(forma: DatosMesa['forma']) {
     const numeros = listaMesas.map((m) => m.numero)
@@ -80,6 +90,15 @@ export default function EditorPlano() {
     setIdArrastrada(null)
   }
 
+  if (cargando) {
+    return (
+      <div>
+        <h1>Editor de plano</h1>
+        <p>Buscando las mesas...</p>
+      </div>
+    )
+  }
+
   return (
     <div>
       <h1>Editor de plano</h1>
@@ -100,15 +119,19 @@ export default function EditorPlano() {
         onMouseUp={soltar}
         onMouseLeave={soltar}
       >
-        {listaMesas.map((mesa) => (
-          <Mesa
-            key={mesa.id}
-            mesa={mesa}
-            onClick={setIdElegida}
-            onMouseDown={agarrar}
-            seleccionada={mesa.id === idElegida}
-          />
-        ))}
+        {listaMesas.length === 0 ? (
+          <p>El salon todavia no tiene mesas. Agrega la primera con los botones de arriba.</p>
+        ) : (
+          listaMesas.map((mesa) => (
+            <Mesa
+              key={mesa.id}
+              mesa={mesa}
+              onClick={setIdElegida}
+              onMouseDown={agarrar}
+              seleccionada={mesa.id === idElegida}
+            />
+          ))
+        )}
       </div>
 
       {elegida ? (
