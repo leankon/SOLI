@@ -3,7 +3,11 @@ import type { Usuario, Rol } from '../data/tipos'
 import { usuarios as usuariosIniciales } from '../data/usuarios'
 import { EMAIL_RESTAURANTE } from '../data/constantes'
 
-export default function CrearRol() {
+type Props = {
+  miId: number
+}
+
+export default function CrearRol({ miId }: Props) {
   const [lista, setLista] = useState(usuariosIniciales)
   const [nombre, setNombre] = useState('')
   const [rol, setRol] = useState<Rol>('mozo')
@@ -39,6 +43,10 @@ export default function CrearRol() {
   }
 
   function borrar(id: number) {
+    // no muestro el boton de borrar en mi propia fila, pero lo chequeo aca
+    // igual: la pantalla puede cambiar, la regla no
+    if (id === miId) return
+
     setLista(lista.filter((u) => u.id !== id))
   }
 
@@ -80,9 +88,13 @@ export default function CrearRol() {
         {lista.map((u) => (
           <li key={u.id}>
             {u.nombre} — {u.rol}{' '}
-            <button type="button" onClick={() => borrar(u.id)}>
-              Borrar
-            </button>
+            {u.id === miId ? (
+              <span>(sos vos)</span>
+            ) : (
+              <button type="button" onClick={() => borrar(u.id)}>
+                Borrar
+              </button>
+            )}
           </li>
         ))}
       </ul>
