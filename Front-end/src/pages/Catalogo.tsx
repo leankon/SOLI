@@ -1,11 +1,23 @@
-import { useState } from 'react'
-import { platos as platosIniciales } from '../data/platos'
+import { useState, useEffect } from 'react'
+import type { Plato as DatosPlato } from '../data/tipos'
+import { API } from '../data/constantes'
 import Plato from '../components/Plato'
 
 export default function Catalogo() {
-  const [listaPlatos, setListaPlatos] = useState(platosIniciales)
+  const [listaPlatos, setListaPlatos] = useState<DatosPlato[]>([])
+  const [cargando, setCargando] = useState(true)
   const [nombre, setNombre] = useState('')
   const [precio, setPrecio] = useState('')
+
+  useEffect(() => {
+    fetch(API + '/platos')
+      .then((r) => r.json())
+      .then((datos) => {
+        // el precio viene como texto desde la base, lo paso a numero
+        setListaPlatos(datos.map((p: DatosPlato) => ({ ...p, precio: Number(p.precio) })))
+        setCargando(false)
+      })
+  }, [])
 
   function agregar() {
     if (nombre === '' || precio === '') return
@@ -45,7 +57,9 @@ export default function Catalogo() {
         <button type="button" onClick={agregar}>Agregar</button>
       </p>
 
-      {listaPlatos.length === 0 ? (
+      {cargando ? (
+        <p>Buscando los platos...</p>
+      ) : listaPlatos.length === 0 ? (
         <p>Todavia no hay platos cargados.</p>
       ) : (
         listaPlatos.map((plato) => (
