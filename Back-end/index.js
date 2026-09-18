@@ -56,8 +56,12 @@
   app.delete("/pide/:id", pedidos.deletePide);
 
 
-  const server = app.listen(port, () => {
-    console.log(` API SOLI listening at http://localhost:${port}`);
-  });
+  // Vercel no usa app.listen. Este if hace que el servidor solo
+  // se levante cuando corres el proyecto en tu maquina.
+  if (!process.env.VERCEL) {
+    app.listen(port, () => {
+      console.log(` API SOLI listening at http://localhost:${port}`);
+    });
+  }
 
-  export { app, server };
+  export default app;
