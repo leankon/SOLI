@@ -55,3 +55,19 @@
     color: var(--texto);
     text-decoration: none;
   }
+  /* el editor es plano a la izquierda, controles a la derecha.
+   flex los pone en fila y align-items: flex-start evita que el panel
+   se estire a lo alto del plano */
+.editor {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.editor-panel {
+  width: 300px;
+  flex-shrink: 0;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 16px;
+}
