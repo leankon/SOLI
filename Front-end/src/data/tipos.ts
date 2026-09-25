@@ -49,3 +49,15 @@ export type Usuario = {
   rol: Rol
   password: string
 }
+
+// una linea de la cuenta, como la devuelve GET /mesas/:id/pedido.
+// el back ya hace el JOIN, por eso viene el nombre y el precio del plato
+// y no el id: no hay que cruzar nada aca
+export type LineaPedido = {
+  id: number
+  plato: string
+  precio: number
+  cantidad: number
+  hora: string
+  fecha: string
+}
