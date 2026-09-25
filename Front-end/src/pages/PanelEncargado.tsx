@@ -9,16 +9,28 @@ export default function PanelEncargado() {
   const [cargando, setCargando] = useState(true)
 
   useEffect(() => {
-    // pido las dos cosas de una. necesito las mesas porque la solicitud
-    // guarda el id de la mesa y yo tengo que mostrar el numero
-    Promise.all([
-      fetch(API + '/solicitudes').then((r) => r.json()),
-      fetch(API + '/mesas').then((r) => r.json()),
-    ]).then(([datosSolicitudes, datosMesas]) => {
-      setSolicitudes(datosSolicitudes)
-      setListaMesas(datosMesas)
-      setCargando(false) 
-    })
+    function traer() {
+      // pido las dos cosas de una. necesito las mesas porque la solicitud
+      // guarda el id de la mesa y yo tengo que mostrar el numero
+      Promise.all([
+        fetch(API + '/solicitudes').then((r) => r.json()),
+        fetch(API + '/mesas').then((r) => r.json()),
+      ]).then(([datosSolicitudes, datosMesas]) => {
+        setSolicitudes(datosSolicitudes)
+        setListaMesas(datosMesas)
+        setCargando(false)
+      })
+    }
+
+    // una vez al entrar, para no esperar tres segundos mirando el cartel
+    traer()
+
+    // y despues cada tres segundos: asi aparecen los llamados nuevos solos
+    const reloj = setInterval(traer, 3000)
+
+    // cuando el encargado se va a otra pantalla apago el reloj. si no,
+    // sigue preguntando para siempre aunque ya nadie este mirando
+    return () => clearInterval(reloj)
   }, [])
 
   // las atendidas quedan en la base con otro estado, no se borran
