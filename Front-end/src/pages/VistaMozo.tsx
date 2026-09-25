@@ -3,6 +3,7 @@ import type { Mesa as DatosMesa, EstadoMesa } from '../data/tipos'
 import { API } from '../data/constantes'
 import Mesa from '../components/mesa'
 import PopUp from '../components/PopUp'
+import Cuenta from '../components/Cuenta'
 
 export default function VistaMozo() {
   const [listaMesas, setListaMesas] = useState<DatosMesa[]>([])
@@ -10,6 +11,9 @@ export default function VistaMozo() {
 
   // arranca en null porque al principio no hay ninguna mesa elegida.
   const [idSeleccionada, setIdSeleccionada] = useState<number | null>(null)
+
+  // cual ventana esta abierta sobre esa mesa: el pop up o la cuenta
+  const [verCuenta, setVerCuenta] = useState(false)
 
   // busco la mesa cada vez que se dibuja. guardo el id y no la mesa entera:
   const mesaSeleccionada = listaMesas.find((m) => m.id === idSeleccionada)
@@ -32,6 +36,11 @@ export default function VistaMozo() {
     setListaMesas(
       listaMesas.map((m) => (m.id === id ? { ...m, estado: nuevo } : m))
     )
+  }
+
+  function cerrarTodo() {
+    setIdSeleccionada(null)
+    setVerCuenta(false)
   }
 
   if (cargando) {
@@ -58,12 +67,17 @@ export default function VistaMozo() {
         )}
       </div>
 
-      {mesaSeleccionada && (
+      {mesaSeleccionada && !verCuenta && (
         <PopUp
           mesa={mesaSeleccionada}
           onCambiarEstado={cambiarEstado}
-          onCerrar={() => setIdSeleccionada(null)}
+          onCerrar={cerrarTodo}
+          onCuenta={() => setVerCuenta(true)}
         />
+      )}
+
+      {mesaSeleccionada && verCuenta && (
+        <Cuenta mesa={mesaSeleccionada} onCerrar={cerrarTodo} />
       )}
     </div>
   )

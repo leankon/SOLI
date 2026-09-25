@@ -12,9 +12,10 @@ type Props = {
   mesa: Mesa
   onCambiarEstado: (id: number, nuevo: EstadoMesa) => void
   onCerrar: () => void
+  onCuenta: () => void
 }
 
-export default function PopUp({ mesa, onCambiarEstado, onCerrar }: Props) {
+export default function PopUp({ mesa, onCambiarEstado, onCerrar, onCuenta }: Props) {
   return (
     <div className="fondo-oscuro">
       <div className="popup">
@@ -39,7 +40,10 @@ export default function PopUp({ mesa, onCambiarEstado, onCerrar }: Props) {
 
         {mesa.estado === 'ocupada' && (
           <>
-            <p className="ayuda">La cuenta todavia no esta hecha, eso viene despues.</p>
+            <button type="button" className="boton-principal" onClick={onCuenta}>
+              Ver la cuenta
+            </button>
+            <p className="ayuda">Liberar la mesa no borra lo que pidieron.</p>
             <button
               type="button"
               className="boton-peligro"
@@ -52,9 +56,14 @@ export default function PopUp({ mesa, onCambiarEstado, onCerrar }: Props) {
 
         {/* el mozo ve el llamado pero no lo apaga: eso es del encargado */}
         {mesa.estado === 'llamando' && (
-          <p className="ayuda">
-            Esta mesa esta llamando. Solo el encargado puede apagar el llamado desde su panel.
-          </p>
+          <>
+            <button type="button" className="boton-principal" onClick={onCuenta}>
+              Ver la cuenta
+            </button>
+            <p className="ayuda">
+              Esta mesa esta llamando. Solo el encargado puede apagar el llamado desde su panel.
+            </p>
+          </>
         )}
       </div>
     </div>
