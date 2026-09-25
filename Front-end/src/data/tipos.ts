@@ -8,6 +8,9 @@ export type Mesa = {
   tamano: number
   forma: 'circular' | 'cuadrado'
   estado: EstadoMesa
+  // cuantas personas entran. va con ? porque la base todavia no tiene
+  // esta columna: las mesas que vienen del back llegan sin ella
+  lugares?: number
 }
 //number es basicamente aca va un numero, que seria el id, el numero de pesa, y la posicion. 
 

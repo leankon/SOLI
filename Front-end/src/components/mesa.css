@@ -26,3 +26,18 @@
   border-color: #3366cc;
   border-width: 3px;
 }
+/* la caja que contiene la mesa y sus sillas. es mas grande que la mesa
+   porque las sillas sobresalen */
+   .mesa-lugar {
+    position: absolute;
+  }
+  
+  .silla {
+    position: absolute;
+    width: 16px;
+    height: 12px;
+    background: var(--borde);
+    border-radius: 3px;
+    /* las sillas no se tocan: los clicks son de la mesa */
+    pointer-events: none;
+  }
