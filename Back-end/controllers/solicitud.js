@@ -26,11 +26,11 @@ const getSolicitud = async (req, res) => {
 
 const createSolicitud = async (req, res) => {
   try {
-    const { estado, fecha, tipo, hora, id_usuario, id_mesa } = req.body;
+    const {  tipo,id_mesa } = req.body;
     const result = await pool.query(
-      `INSERT INTO solicitud (estado, fecha, tipo, hora, id_usuario, id_mesa)
-       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [estado, fecha, tipo, hora, id_usuario, id_mesa]
+      `INSERT INTO solicitud (tipo, id_mesa , estado, fecha, hora)
+       VALUES ($1, $2,'pendiente', CURRENT_DATE, CURRENT_TIME) RETURNING *`,
+      [ tipo,id_mesa ]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
