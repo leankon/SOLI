@@ -15,13 +15,20 @@ export type Mesa = {
 // los 5 botones que tiene el aparato de cada mesa
 export type Motivo = 'pan' | 'mozo' | 'cuenta' | 'cancelar' | 'menu'
 
-export type Llamado = {
+// una solicitud como viene de la base
+export type Solicitud = {
   id: number
-  mesa: number
-  motivo: Motivo
-  // guardo el numero, no el texto "hace 8 min".
-  // el texto lo arma el componente cuando aparece
-  haceMinutos: number
+  // 'pendiente' mientras no la atendieron. no se borra, cambia de estado
+  estado: string
+  // la base guarda el dia y la hora en dos columnas distintas
+  fecha: string
+  hora: string
+  // le pongo string y no Motivo porque este dato viene de afuera:
+  // no puedo prometerle a TypeScript que sea uno de los cinco que conozco
+  tipo: string
+  id_usuario: number
+  // ojo: es el id de la mesa en la base, no el numero que ve el cliente
+  id_mesa: number
 }
 
 export type Plato = {

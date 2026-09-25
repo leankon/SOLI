@@ -1,19 +1,23 @@
 import { useState } from 'react'
-import {useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import type { Usuario } from '../data/tipos'
 import { usuarios } from '../data/usuarios'
 import { EMAIL_RESTAURANTE } from '../data/constantes'
 
 type Props = {
-  setRol: (rol: string) => void
+  setUsuario: (usuario: Usuario) => void
 }
 
-export default function Login({ setRol }: Props) {
+export default function Login({ setUsuario }: Props) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const navigate = useNavigate()
 
-  function entrar() {
+  function entrar(e: React.FormEvent) {
+    // sin esto el navegador recarga la pagina entera y se pierde todo
+    e.preventDefault()
+
     if (email === '' || password === '') {
       setError('Completa los dos campos')
       return
@@ -27,7 +31,7 @@ export default function Login({ setRol }: Props) {
       return
     }
 
-    setRol(usuario.rol)
+    setUsuario(usuario)
 
     if (usuario.rol === 'mozo') {
       navigate('/mozo')
@@ -40,9 +44,24 @@ export default function Login({ setRol }: Props) {
     <div>
       <h1>SOLI</h1>
       <p>Iniciar sesion</p>
-      <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} />
-      <button onClick={entrar}>Entrar</button>
-      {error && <p>{error}</p>}</div>
+
+      <form onSubmit={entrar}>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button type="submit">Entrar</button>
+      </form>
+
+      {error && <p>{error}</p>}
+    </div>
   )
 }

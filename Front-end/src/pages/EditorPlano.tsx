@@ -113,66 +113,70 @@ export default function EditorPlano() {
         </button>
       </p>
 
-      <div
-        className="plano"
-        onMouseMove={mover}
-        onMouseUp={soltar}
-        onMouseLeave={soltar}
-      >
-        {listaMesas.length === 0 ? (
-          <p>El salon todavia no tiene mesas. Agrega la primera con los botones de arriba.</p>
-        ) : (
-          listaMesas.map((mesa) => (
-            <Mesa
-              key={mesa.id}
-              mesa={mesa}
-              onClick={setIdElegida}
-              onMouseDown={agarrar}
-              seleccionada={mesa.id === idElegida}
-            />
-          ))
-        )}
-      </div>
-
-      {elegida ? (
-        <div>
-          <h2>Mesa {elegida.numero}</h2>
-
-          <p>Forma</p>
-          <p>
-            {FORMAS.map((f) => (
-              <button
-                key={f.valor}
-                type="button"
-                onClick={() => cambiarForma(elegida.id, f.valor)}
-                disabled={elegida.forma === f.valor}
-              >
-                {f.nombre}
-              </button>
-            ))}
-          </p>
-
-          <p>Tamano</p>
-          <p>
-            {TAMANOS.map((t) => (
-              <button
-                key={t.px}
-                type="button"
-                onClick={() => cambiarTamano(elegida.id, t.px)}
-                disabled={elegida.tamano === t.px}
-              >
-                {t.nombre} ({t.px})
-              </button>
-            ))}
-          </p>
-
-          <button type="button" onClick={() => borrar(elegida.id)}>
-            Borrar mesa
-          </button>
+      <div className="editor">
+        <div
+          className="plano"
+          onMouseMove={mover}
+          onMouseUp={soltar}
+          onMouseLeave={soltar}
+        >
+          {listaMesas.length === 0 ? (
+            <p>El salon todavia no tiene mesas. Agrega la primera con los botones de arriba.</p>
+          ) : (
+            listaMesas.map((mesa) => (
+              <Mesa
+                key={mesa.id}
+                mesa={mesa}
+                onClick={setIdElegida}
+                onMouseDown={agarrar}
+                seleccionada={mesa.id === idElegida}
+              />
+            ))
+          )}
         </div>
-      ) : (
-        <p>Ninguna mesa elegida.</p>
-      )}
+
+        <div className="editor-panel">
+          {elegida ? (
+            <div>
+              <h2>Mesa {elegida.numero}</h2>
+
+              <p>Forma</p>
+              <p>
+                {FORMAS.map((f) => (
+                  <button
+                    key={f.valor}
+                    type="button"
+                    onClick={() => cambiarForma(elegida.id, f.valor)}
+                    disabled={elegida.forma === f.valor}
+                  >
+                    {f.nombre}
+                  </button>
+                ))}
+              </p>
+
+              <p>Tamano</p>
+              <p>
+                {TAMANOS.map((t) => (
+                  <button
+                    key={t.px}
+                    type="button"
+                    onClick={() => cambiarTamano(elegida.id, t.px)}
+                    disabled={elegida.tamano === t.px}
+                  >
+                    {t.nombre} ({t.px})
+                  </button>
+                ))}
+              </p>
+
+              <button type="button" onClick={() => borrar(elegida.id)}>
+                Borrar mesa
+              </button>
+            </div>
+          ) : (
+            <p>Ninguna mesa elegida.</p>
+          )}
+        </div>
+      </div>
     </div>
   )
 }
