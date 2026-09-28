@@ -35,10 +35,11 @@
    y no desde la esquina de la pantalla */
 .plano {
   position: relative;
-  width: 1200px;
-  height: 620px;
+  width: 1000px;
+  height: 520px;
   border: 1px solid var(--borde);
   background: var(--fondo);
+  overflow: hidden;
 }
 /* la barra de arriba. flex pone los links en fila y gap los separa,
    asi no quedan pegados uno atras del otro */
@@ -71,3 +72,43 @@
   border-radius: 8px;
   padding: 16px;
 }
+/* la vista del mozo: el salon a la izquierda y los llamados al costado */
+.mozo {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.panel-llamados {
+  width: 260px;
+  flex-shrink: 0;
+  /* la misma altura que el plano para que la fila cierre pareja */
+  height: 520px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 16px;
+  /* si entran muchos llamados scrollea esta cajita, no la pagina entera */
+  overflow-y: auto;
+}
+
+.panel-llamados h2 {
+  font-size: 18px;
+  margin: 0 0 12px 0;
+}
+
+/* el resumen de arriba: una pastilla por estado, del color del estado */
+.resumen {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.pastilla {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 14px;
+}
+
+.pastilla-ocupada  { background: var(--verde); }
+.pastilla-llamando { background: var(--rojo); }
+.pastilla-vacia    { background: var(--gris); }
