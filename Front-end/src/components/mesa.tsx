@@ -95,9 +95,15 @@ export default function Mesa({ mesa, onClick, seleccionada, onMouseDown }: Props
           style={{
             left: s.x,
             top: s.y,
+            width: ANCHO_SILLA,
+            height: ALTO_SILLA,
             transform: 'translate(-50%, -50%) rotate(' + s.grados + 'deg)',
           }}
-        />
+        >
+          {/* el respaldo va del lado de afuera, el asiento contra la mesa */}
+          <span className="respaldo" />
+          <span className="asiento" />
+        </span>
       ))}
 
       <button
