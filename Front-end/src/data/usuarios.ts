@@ -6,5 +6,5 @@ export const usuarios: Usuario[] = [
   { id: 2, nombre: 'Camila', rol: 'encargado', password: '1' },
   { id: 3, nombre: 'Sofia',  rol: 'mozo',      password: 'sofia' },
   { id: 4, nombre: 'Lucas',  rol: 'mozo',      password: 'lucas' },
-  { id: 5, nombre: 'Thiago', rol: 'mozo',      password: 'thiago' },
+  { id: 5, nombre: 'Thiago', rol: 'mozo',      password: '2' },
 ]
