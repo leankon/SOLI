@@ -35,6 +35,9 @@
   app.put("/usuarios/:id", usuarios.updateUsuario);
   app.delete("/usuarios/:id", usuarios.deleteUsuario);
 
+  app.post("/usuarios", usuarios.login)
+  
+
   // Platos
   app.get("/platos", platos.getPlatos);
   app.get("/platos/:id", platos.getPlato);
