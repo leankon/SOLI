@@ -77,4 +77,10 @@ const deleteUsuario = async (req, res) => {
   }
 };
 
-export default { getUsuarios, getUsuario, createUsuario, updateUsuario, deleteUsuario };
+const login = async (req, res) => {
+  res.json({ mensaje: "hola" });
+};
+
+
+
+export default { getUsuarios, getUsuario, createUsuario, updateUsuario, deleteUsuario , login };
