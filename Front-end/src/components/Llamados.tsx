@@ -31,8 +31,9 @@ type Props = {
   solicitud: Solicitud
   // el numero lo busca la pagina, que es la que tiene las mesas
   numeroMesa: number
-  // el llamado no se borra solo: avisa "me atendieron" y manda su id
-  onAtender: (id: number) => void
+  // el llamado no se borra solo: avisa "me atendieron" y manda su id.
+  // va con ? porque en la vista del mozo no hay boton para apagarlo
+  onAtender?: (id: number) => void
 }
 
 export default function Llamado({ solicitud, numeroMesa, onAtender }: Props) {
@@ -44,10 +45,15 @@ export default function Llamado({ solicitud, numeroMesa, onAtender }: Props) {
       <strong>Mesa {numeroMesa}</strong> —{' '}
       {/* si la base manda un tipo que no conozco, lo muestro tal cual
           en vez de dejar el renglon a medias */}
-      {TEXTO_MOTIVO[solicitud.tipo] || solicitud.tipo} — {textoDeEspera(minutos)}{' '}
-      <button type="button" onClick={() => onAtender(solicitud.id)}>
-        ✓
-      </button>
+      {TEXTO_MOTIVO[solicitud.tipo] || solicitud.tipo} — {textoDeEspera(minutos)}
+      {onAtender && (
+        <>
+          {' '}
+          <button type="button" onClick={() => onAtender(solicitud.id)}>
+            ✓
+          </button>
+        </>
+      )}
     </p>
   )
 }
