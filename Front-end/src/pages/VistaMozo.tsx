@@ -137,6 +137,7 @@ export default function VistaMozo() {
       {mesaSeleccionada && !verCuenta && (
         <PopUp
           mesa={mesaSeleccionada}
+          llamados={pendientes.filter((s) => s.id_mesa === mesaSeleccionada.id)}
           onCambiarEstado={cambiarEstado}
           onCerrar={cerrarTodo}
           onCuenta={() => setVerCuenta(true)}
