@@ -74,73 +74,76 @@ export default function Cuenta({ mesa, onCerrar }: Props) {
 
   return (
     <div className="fondo-oscuro">
-      <div className="popup">
-        <div className="popup-header">
-          <h2>Cuenta de la Mesa {mesa.numero}</h2>
-          <button type="button" className="cerrar" onClick={onCerrar}>X</button>
-        </div>
+      {/* popup-ancho porque aca entran la comanda y el catalogo entero */}
+      <div className="popup popup-ancho">
+        <div className="popup-cuerpo">
+          <div className="popup-header">
+            <h2>Cuenta de la Mesa {mesa.numero}</h2>
+            <button type="button" className="cerrar" onClick={onCerrar}>✕</button>
+          </div>
 
-        {cargando ? (
-          <p>Buscando la cuenta...</p>
-        ) : (
-          <div>
-            <h3>Lo que ya pidio</h3>
+          {cargando ? (
+            <p>Buscando la cuenta...</p>
+          ) : (
+            <div>
+              <h3>Lo que ya pidio</h3>
 
-            {lineas.length === 0 ? (
-              <p className="ayuda">Todavia no pidieron nada.</p>
-            ) : (
-              <div>
-                {lineas.map((l) => (
-                  <div className="linea" key={l.id}>
-                    <span className="nombre">
-                      {l.cantidad} x {l.plato}
-                    </span>
-                    <span className="precio">{plata(l.precio * l.cantidad)}</span>
-                    <button type="button" onClick={() => sacar(l.id)}>
-                      Sacar
+              {lineas.length === 0 ? (
+                <p className="ayuda">Todavia no pidieron nada.</p>
+              ) : (
+                <div>
+                  {lineas.map((l) => (
+                    <div className="linea" key={l.id}>
+                      <span className="nombre">
+                        {l.cantidad} x {l.plato}
+                      </span>
+                      <span className="precio">{plata(l.precio * l.cantidad)}</span>
+                      <button type="button" onClick={() => sacar(l.id)}>
+                        Sacar
+                      </button>
+                    </div>
+                  ))}
+
+                  <div className="total">
+                    <span>Total</span>
+                    <span>{plata(total)}</span>
+                  </div>
+                </div>
+              )}
+
+              <h3>Agregar del catalogo</h3>
+
+              <input
+                className="buscador"
+                placeholder="Buscar plato"
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+              />
+
+              {visibles.length === 0 ? (
+                <p className="ayuda">Ningun plato coincide con esa busqueda.</p>
+              ) : (
+                visibles.map((p) => (
+                  <div className="linea" key={p.id}>
+                    <span className="nombre">{p.nombre}</span>
+                    <span className="precio">{plata(p.precio)}</span>
+                    <button type="button" onClick={() => cambiarCantidad(p.id, cantidadDe(p.id) - 1)}>
+                      -
+                    </button>
+                    <span>{cantidadDe(p.id)}</span>
+                    <button type="button" onClick={() => cambiarCantidad(p.id, cantidadDe(p.id) + 1)}>
+                      +
+                    </button>
+                    <button type="button" onClick={() => agregar(p)}>
+                      Agregar
                     </button>
                   </div>
-                ))}
-
-                <div className="total">
-                  <span>Total</span>
-                  <span>{plata(total)}</span>
-                </div>
-              </div>
-            )}
-
-            <h3>Agregar del catalogo</h3>
-
-            <input
-              className="buscador"
-              placeholder="Buscar plato"
-              value={busqueda}
-              onChange={(e) => setBusqueda(e.target.value)}
-            />
-
-            {visibles.length === 0 ? (
-              <p className="ayuda">Ningun plato coincide con esa busqueda.</p>
-            ) : (
-              visibles.map((p) => (
-                <div className="linea" key={p.id}>
-                  <span className="nombre">{p.nombre}</span>
-                  <span className="precio">{plata(p.precio)}</span>
-                  <button type="button" onClick={() => cambiarCantidad(p.id, cantidadDe(p.id) - 1)}>
-                    -
-                  </button>
-                  <span>{cantidadDe(p.id)}</span>
-                  <button type="button" onClick={() => cambiarCantidad(p.id, cantidadDe(p.id) + 1)}>
-                    +
-                  </button>
-                  <button type="button" onClick={() => agregar(p)}>
-                    Agregar
-                  </button>
-                </div>
-              ))
-            )}
-          </div>
-        )}
+                ))
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
-}   
+}
