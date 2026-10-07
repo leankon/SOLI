@@ -24,13 +24,13 @@ const getMesa = async (req, res) => {
   }
 };
 
-const createMesa = async (req, res) => {
+const createMesa = async (req, res) => {  
   try {
-    const { numero, estado, x, y, tamano, forma } = req.body;
+    const { numero, estado, x, y, tamano, forma , lugares } = req.body;
     const result = await pool.query(
-      `INSERT INTO mesa (numero, estado, x, y, tamano, forma)
-       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [numero, estado, x, y, tamano, forma]
+      `INSERT INTO mesa (numero, estado, x, y, tamano, forma , lugares)
+       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      [numero, estado, x, y, tamano, forma , lugares]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
