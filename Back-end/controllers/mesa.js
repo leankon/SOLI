@@ -42,11 +42,11 @@ const createMesa = async (req, res) => {
 const updateMesa = async (req, res) => {
   try {
     const { id } = req.params;
-    const { numero, estado, x, y, tamano, forma } = req.body;
+    const { numero, estado, x, y, tamano, forma,lugares } = req.body;
     const result = await pool.query(
-      `UPDATE mesa SET numero = $1, estado = $2, x = $3, y = $4, tamano = $5, forma = $6
-       WHERE id = $7 RETURNING *`,
-      [numero, estado, x, y, tamano, forma, id]
+      `UPDATE mesa SET numero = $1, estado = $2, x = $3, y = $4, tamano = $5, forma = $6 , lugares=$7
+       WHERE id = $8 RETURNING * `,
+      [numero, estado, x, y, tamano, forma, lugares , id]
     );
     if (result.rows.length === 0) {
       return res.status(404).json({ error: "Mesa no encontrada" });
