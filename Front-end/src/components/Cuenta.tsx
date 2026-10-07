@@ -49,8 +49,8 @@ export default function Cuenta({ mesa, onCerrar }: Props) {
 
   const agregarPlato = async (plato: Plato) => {
     try {
-      const response = await fetch(`${API}/pide`, {
-        method: 'POST',
+      const response = await fetch(API + '/pide', {
+         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -93,8 +93,8 @@ export default function Cuenta({ mesa, onCerrar }: Props) {
     setLineas(lineas.filter((l) => l.id !== idLinea))
 
     try {
-      const response = await fetch(`${API}/pide/${idLinea}`, {
-        method: 'DELETE',
+      const response = await fetch(API + '/pide/' + idLinea, {
+         method: 'DELETE',
       })
 
       if (!response.ok) {

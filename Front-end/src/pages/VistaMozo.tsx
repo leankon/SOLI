@@ -18,16 +18,34 @@ export default function VistaMozo() {
   const [verCuenta, setVerCuenta] = useState(false)
 
   useEffect(() => {
-    // pido las dos juntas: el plano sale de las mesas y los llamados de las
-    // solicitudes, que son tablas distintas
-    Promise.all([
-      fetch(API + '/mesas').then((r) => r.json()),
-      fetch(API + '/solicitudes').then((r) => r.json()),
-    ]).then(([datosMesas, datosSolicitudes]) => {
-      setListaMesas(datosMesas)
-      setSolicitudes(datosSolicitudes)
-      setCargando(false)
-    })
+    const traer = async () => {
+      try {
+        // pido las dos juntas: el plano sale de las mesas y los llamados de
+        // las solicitudes, que son tablas distintas
+        const [datosMesas, datosSolicitudes] = await Promise.all([
+          fetch(API + '/mesas').then((r) => r.json()),
+          fetch(API + '/solicitudes').then((r) => r.json()),
+        ])
+
+        setListaMesas(datosMesas)
+        setSolicitudes(datosSolicitudes)
+        setCargando(false)
+      } catch (error) {
+        // no corto nada: en tres segundos vuelve a intentar solo
+        console.error('Hubo un error:', error)
+      }
+    }
+
+    // una vez al entrar, para no esperar tres segundos mirando el cartel
+    traer()
+
+    // y despues cada tres segundos: asi el llamado nuevo aparece solo,
+    // sin que el mozo tenga que apretar F5
+    const reloj = setInterval(traer, 3000)
+
+    // cuando el mozo se va a otra pantalla apago el reloj. si no, sigue
+    // preguntando para siempre aunque ya nadie este mirando
+    return () => clearInterval(reloj)
   }, [])
 
   // las atendidas quedan en la base con otro estado, no se borran
@@ -56,7 +74,7 @@ export default function VistaMozo() {
     return mesa === undefined ? idMesa : mesa.numero
   }
 
-  function cambiarEstado(id: number, nuevo: EstadoMesa) {
+  const cambiarEstado = async (id: number, nuevo: EstadoMesa) => {
     // busco en listaMesas y no en mesasEnPantalla: quiero el estado que esta
     // guardado, no el 'llamando' que agregue yo para pintar
     const mesa = listaMesas.find((m) => m.id === id)
@@ -70,19 +88,24 @@ export default function VistaMozo() {
     // la pinto ya, sin esperar la respuesta, asi el mozo no ve el tilde
     setListaMesas(listaMesas.map((m) => (m.id === id ? actualizada : m)))
 
-    fetch(API + '/mesas/' + id, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(actualizada),
-    })
-      .then((r) => {
-        if (!r.ok) throw new Error('el back no guardo')
+    try {
+      const response = await fetch(API + '/mesas/' + id, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(actualizada),
       })
-      .catch(() => {
-        // vuelvo atras: peor es mostrar una mesa libre que en la base sigue ocupada
-        setListaMesas(antes)
-        alert('No se pudo guardar el cambio. Fijate la conexion.')
-      })
+
+      if (!response.ok) {
+        throw new Error('Error al actualizar la mesa')
+      }
+    } catch (error) {
+      console.error('Hubo un error:', error)
+      // vuelvo atras: peor es mostrar una mesa libre que en la base sigue ocupada
+      setListaMesas(antes)
+      alert('No se pudo guardar el cambio. Fijate la conexion.')
+    }
   }
 
   function cerrarTodo() {
