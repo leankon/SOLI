@@ -1,4 +1,4 @@
-// el lado de una mesa en pixeles. lo uso en la vista mozo y en el editor de plano
-export const tamano_MESA = 160
+// el lado de una mesa en pixeles. lo uso en la vista mozo y en el editor de plano.
+export const tamano_MESA = 80
 export const EMAIL_RESTAURANTE = '1@gmail.com'
 export const API = 'https://soli-olive.vercel.app'

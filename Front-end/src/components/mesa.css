@@ -21,8 +21,42 @@
   border-color: var(--texto);
   border-width: 3px;
 }
+
 /* la mesa elegida en el editor */
 .mesa.mesa-seleccionada {
   border-color: #3366cc;
   border-width: 3px;
+}
+
+/* la caja que contiene la mesa y sus sillas. es mas grande que la mesa
+   porque las sillas sobresalen */
+.mesa-lugar {
+  position: absolute;
+}
+
+/* la silla en si no se ve: es la cajita de 16x12 que ordena las dos partes */
+.silla {
+  position: absolute;
+  /* las sillas no se tocan: los clicks son de la mesa */
+  pointer-events: none;
+}
+
+.silla .respaldo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 16px;
+  height: 4px;
+  border-radius: 2px;
+  background: #a6a6a6;
+}
+
+.silla .asiento {
+  position: absolute;
+  left: 2px;
+  top: 5px;
+  width: 13px;
+  height: 7px;
+  border-radius: 2px;
+  background: #dadada;
 }

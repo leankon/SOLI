@@ -1,75 +1,123 @@
 .fondo-oscuro {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .popup {
-    background: var(--fondo);
-    border: 1px solid var(--borde);
-    border-radius: 8px;
-    padding: 24px;
-    width: 420px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  
-  .popup-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  
-  .popup-header h2 {
-    margin: 0;
-    font-size: 22px;
-  }
-  
-  /* el ✕ se va solo a la derecha */
-  .cerrar {
-    margin-left: auto;
-    background: none;
-    border: none;
-    font-size: 18px;
-    color: #737373;
-    padding: 0;
-  }
-  
-  .chip {
-    font-size: 13px;
-    padding: 4px 10px;
-    border-radius: 999px;
-  }
-  .chip-vacia    { background: var(--gris); }
-  .chip-ocupada  { background: var(--verde); }
-  .chip-llamando { background: var(--rojo); }
-  
-  .ayuda {
-    margin: 0;
-    font-size: 14px;
-    color: #737373;
-  }
-  
-  .boton-principal,
-  .boton-peligro {
-    padding: 14px;
-    border-radius: 4px;
-    font-size: 16px;
-  }
-  
-  .boton-principal {
-    background: var(--texto);
-    color: #ffffff;
-    border: none;
-    font-weight: bold;
-  }
-  
-  .boton-peligro {
-    background: var(--fondo);
-    color: var(--rojo);
-    border: 1px solid var(--rojo);
-  }
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* sin padding: las franjas de llamado van de borde a borde, asi que el
+   aire lo pone el cuerpo. overflow para que el fondo rosa no se salga
+   de las esquinas redondeadas */
+.popup {
+  background: var(--fondo);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  width: 420px;
+  overflow: hidden;
+}
+
+.popup-cuerpo {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* los llamados pendientes de la mesa, apilados arriba de todo */
+.franja-llamado,
+.franja-mas {
+  background: #fbecec;
+}
+
+.franja-llamado {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px;
+  border-bottom: 1px solid #f2d7d7;
+  font-size: 15px;
+}
+
+.franja-llamado .motivo {
+  font-weight: bold;
+}
+
+/* el "hace X min" se va solo a la derecha */
+.franja-llamado .espera {
+  margin-left: auto;
+  font-size: 14px;
+  color: #737373;
+}
+
+.chapa-prioridad {
+  background: var(--rojo);
+  color: #ffffff;
+  font-size: 12px;
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+/* el renglon corto del final cuando hay mas de tres llamados */
+.franja-mas {
+  padding: 8px 24px;
+  font-size: 14px;
+  color: #737373;
+}
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.popup-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+/* el ✕ se va solo a la derecha */
+.cerrar {
+  margin-left: auto;
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #737373;
+  padding: 0;
+}
+
+.chip {
+  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.chip-vacia    { background: var(--gris); }
+.chip-ocupada  { background: var(--verde); }
+.chip-llamando { background: var(--rojo); }
+
+.ayuda {
+  margin: 0;
+  font-size: 14px;
+  color: #737373;
+}
+
+.boton-principal,
+.boton-peligro {
+  padding: 14px;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.boton-principal {
+  background: var(--texto);
+  color: #ffffff;
+  border: none;
+  font-weight: bold;
+}
+
+.boton-peligro {
+  background: var(--fondo);
+  color: var(--rojo);
+  border: 1px solid var(--rojo);
+}

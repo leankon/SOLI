@@ -1,0 +1,68 @@
+/* la cuenta necesita mas lugar que un pop up comun: adentro entran la
+   comanda, el total y el catalogo entero */
+   .popup-ancho {
+    width: 620px;
+  }
+  
+  /* si el catalogo es largo, scrollea la cuenta y no la pagina de atras.
+     85vh deja ver que hay fondo oscuro arriba y abajo */
+  .popup-ancho .popup-cuerpo {
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+  
+  /* los h3 vienen con margenes grandes de fabrica y el cuerpo ya separa
+     las cosas con gap */
+  .popup-cuerpo h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #737373;
+  }
+  
+  /* cada linea de la cuenta y cada plato del menu es una fila:
+     el nombre a la izquierda y el precio pegado a la derecha */
+  .linea {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--borde);
+  }
+  
+  .linea .nombre {
+    flex: 1;
+  }
+  
+  /* tabular-nums hace que los numeros ocupen todos lo mismo,
+     asi los precios quedan alineados en columna */
+  .linea .precio {
+    font-variant-numeric: tabular-nums;
+  }
+  
+  /* los botones de la fila no se achican cuando el nombre del plato es largo */
+  .linea button {
+    flex-shrink: 0;
+    padding: 4px 10px;
+    border: 1px solid var(--borde);
+    border-radius: 4px;
+    background: var(--fondo);
+  }
+  
+  .total {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 14px;
+    font-size: 18px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  
+  .buscador {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--borde);
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }

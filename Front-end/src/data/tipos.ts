@@ -8,6 +8,9 @@ export type Mesa = {
   tamano: number
   forma: 'circular' | 'cuadrado'
   estado: EstadoMesa
+  // cuantas personas entran. va con ? porque la base todavia no tiene
+  // esta columna: las mesas que vienen del back llegan sin ella
+  lugares?: number
 }
 //number es basicamente aca va un numero, que seria el id, el numero de pesa, y la posicion. 
 
@@ -45,4 +48,16 @@ export type Usuario = {
   nombre: string
   rol: Rol
   password: string
+}
+
+// una linea de la cuenta, como la devuelve GET /mesas/:id/pedido.
+// el back ya hace el JOIN, por eso viene el nombre y el precio del plato
+// y no el id: no hay que cruzar nada aca
+export type LineaPedido = {
+  id: number
+  plato: string
+  precio: number
+  cantidad: number
+  hora: string
+  fecha: string
 }
