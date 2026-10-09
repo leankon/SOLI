@@ -78,8 +78,25 @@ const deleteUsuario = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  res.json({ mensaje: "hola" });
-};
+
+try{
+ const {email, contraseña} = req.body
+ const respuesta = await pool.query ("SELECT  id, nombre, apellido, nombre_usuario, rol FROM  usuario WHERE nombre_usuario =$1 AND contrasena =$2.")
+
+
+
+}
+
+
+catch (err)  {
+
+
+}
+
+
+
+
+}
 
 
 

@@ -22,7 +22,7 @@ const getPlato = async (req, res) => {
     console.error(err);
     res.status(500).json({ error: "Error al obtener el plato" });
   }
-};
+};  
 
 const createPlato = async (req, res) => {
   try {
