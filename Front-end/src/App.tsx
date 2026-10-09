@@ -39,7 +39,7 @@ export default function App() {
         <Route path="/login" element={login} />
         <Route path="/mozo" element={soloPara('mozo', <VistaMozo />)} />
         <Route path="/encargado" element={soloPara('encargado', <PanelEncargado />)} />
-        <Route path="/plano" element={soloPara('encargado', <EditorPlano />)} />
+        <Route path="/plano" element={soloPara('encargado', <EditorPlano idUsuario={miId} />)} />
         <Route path="/catalogo" element={soloPara('encargado', <Catalogo />)} />
         <Route path="/crear-rol" element={soloPara('encargado', <CrearRol miId={miId} />)} />
 
