@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react'
 import type { Mesa as DatosMesa } from '../data/tipos'
-import { API } from '../data/constantes'
+import { API, tamano_MESA } from '../data/constantes'
 import Mesa from '../components/mesa'
 
 // el mismo tamano que tiene .plano en el css
-const ANCHO_PLANO = 1200
-const ALTO_PLANO = 620
+const ANCHO_PLANO = 1000
+const ALTO_PLANO = 520
 
+// sacados de la escala del figma (de 48 a 123). la mediana es la de siempre,
+// la que usan las mesas nuevas
 const TAMANOS = [
-  { nombre: 'Chica', px: 80 },
-  { nombre: 'Mediana', px: 110 },
-  { nombre: 'Grande', px: 155 },
+  { nombre: 'Chica', px: 63 },
+  { nombre: 'Mediana', px: tamano_MESA },
+  { nombre: 'Grande', px: 108 },
 ]
 
 const FORMAS = [
@@ -18,51 +20,146 @@ const FORMAS = [
   { nombre: 'Redonda', valor: 'circular' },
 ] as const
 
-export default function EditorPlano() {
+// los mismos que use en el figma: de a dos, de a cuatro y de a seis
+const LUGARES = [2, 4, 6]
+
+// cuanto se corre cada mesa nueva para no taparse con la anterior:
+// la mesa, las sillas de los dos lados y un poco de aire
+const PASO = tamano_MESA + 40
+
+type Props = {
+  // quien esta editando. viaja en cada cambio que se guarda
+  idUsuario: number
+}
+
+export default function EditorPlano({ idUsuario }: Props) {
   const [listaMesas, setListaMesas] = useState<DatosMesa[]>([])
+  // como estan las mesas en la base. comparando con esta se cuales cambie
+  const [guardadas, setGuardadas] = useState<DatosMesa[]>([])
   const [cargando, setCargando] = useState(true)
+  const [guardando, setGuardando] = useState(false)
   const [idElegida, setIdElegida] = useState<number | null>(null)
   const [idArrastrada, setIdArrastrada] = useState<number | null>(null)
   const [agarre, setAgarre] = useState({ x: 0, y: 0 })
 
   const elegida = listaMesas.find((m) => m.id === idElegida)
 
+  // una mesa cambio si alguno de sus datos no es igual al de la base
+  const cambiadas = listaMesas.filter((m) => {
+    const enLaBase = guardadas.find((g) => g.id === m.id)
+    return JSON.stringify(m) !== JSON.stringify(enLaBase)
+  })
+
   useEffect(() => {
     fetch(API + '/mesas')
       .then((r) => r.json())
       .then((datos) => {
         setListaMesas(datos)
+        setGuardadas(datos)
         setCargando(false)
       })
   }, [])
 
-  function agregar(forma: DatosMesa['forma']) {
+  // mover, forma, tamano y lugares se guardan todos juntos con el boton
+  const guardar = async () => {
+    setGuardando(true)
+
+    try {
+      // un PUT por cada mesa que cambio. el PUT pisa todas las columnas,
+      // asi que siempre va la mesa entera
+      for (const mesa of cambiadas) {
+        const response = await fetch(API + '/mesas/' + mesa.id, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ...mesa, id_usuario: idUsuario }),
+        })
+
+        if (!response.ok) {
+          throw new Error('Error al guardar la mesa ' + mesa.numero)
+        }
+      }
+
+      setGuardadas(listaMesas)
+    } catch (error) {
+      console.error('Hubo un error:', error)
+      alert('No se pudo guardar el plano. Fijate la conexion y volve a apretar Guardar.')
+    }
+
+    setGuardando(false)
+  }
+
+  // crear y borrar van a la base en el momento: la mesa nueva necesita
+  // el id que le pone la base
+  const agregar = async (forma: DatosMesa['forma']) => {
     const numeros = listaMesas.map((m) => m.numero)
-    const nueva: DatosMesa = {
-      id: Date.now(),
+    // cuantas entran en una fila antes de pasarse del borde del plano
+    const porFila = Math.floor((ANCHO_PLANO - 40) / PASO)
+
+    // sin id: el id lo pone la base
+    const nueva = {
       numero: Math.max(0, ...numeros) + 1,
       // las nuevas salen en fila para que no se tapen entre si
-      x: 20 + (listaMesas.length % 8) * 140,
+      x: 20 + (listaMesas.length % porFila) * PASO,
       y: 20,
-      tamano: 110,
+      tamano: tamano_MESA,
       forma,
+      lugares: 4,
       estado: 'vacia',
+      id_usuario: idUsuario,
     }
-    setListaMesas([...listaMesas, nueva])
-    setIdElegida(nueva.id)
+
+    try {
+      const response = await fetch(API + '/mesas', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(nueva),
+      })
+
+      if (!response.ok) {
+        throw new Error('Error al crear la mesa')
+      }
+
+      // el back devuelve la mesa ya guardada, con su id de verdad
+      const data = await response.json()
+      setListaMesas([...listaMesas, data])
+      setGuardadas([...guardadas, data])
+      setIdElegida(data.id)
+    } catch (error) {
+      console.error('Hubo un error:', error)
+      alert('No se pudo crear la mesa. Fijate la conexion.')
+    }
   }
 
-  function borrar(id: number) {
-    setListaMesas(listaMesas.filter((m) => m.id !== id))
-    setIdElegida(null)
+  const borrar = async (id: number) => {
+    try {
+      const response = await fetch(API + '/mesas/' + id, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id_usuario: idUsuario }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Error al borrar la mesa')
+      }
+
+      setListaMesas(listaMesas.filter((m) => m.id !== id))
+      setGuardadas(guardadas.filter((m) => m.id !== id))
+      setIdElegida(null)
+    } catch (error) {
+      console.error('Hubo un error:', error)
+      alert('No se pudo borrar la mesa. Puede que tenga pedidos o llamados guardados.')
+    }
   }
 
-  function cambiarTamano(id: number, nuevo: number) {
-    setListaMesas(listaMesas.map((m) => (m.id === id ? { ...m, tamano: nuevo } : m)))
-  }
-
-  function cambiarForma(id: number, nueva: DatosMesa['forma']) {
-    setListaMesas(listaMesas.map((m) => (m.id === id ? { ...m, forma: nueva } : m)))
+  // forma, tamano y lugares: solo en pantalla hasta que aprieten Guardar
+  function cambiarMesa(id: number, cambios: Partial<DatosMesa>) {
+    setListaMesas(listaMesas.map((m) => (m.id === id ? { ...m, ...cambios } : m)))
   }
 
   function agarrar(e: React.MouseEvent, mesa: DatosMesa) {
@@ -110,6 +207,13 @@ export default function EditorPlano() {
         </button>{' '}
         <button type="button" onClick={() => agregar('circular')}>
           + Mesa redonda
+        </button>{' '}
+        <button
+          type="button"
+          onClick={guardar}
+          disabled={cambiadas.length === 0 || guardando}
+        >
+          {guardando ? 'Guardando...' : 'Guardar plano'}
         </button>
       </p>
 
@@ -146,7 +250,7 @@ export default function EditorPlano() {
                   <button
                     key={f.valor}
                     type="button"
-                    onClick={() => cambiarForma(elegida.id, f.valor)}
+                    onClick={() => cambiarMesa(elegida.id, { forma: f.valor })}
                     disabled={elegida.forma === f.valor}
                   >
                     {f.nombre}
@@ -160,10 +264,25 @@ export default function EditorPlano() {
                   <button
                     key={t.px}
                     type="button"
-                    onClick={() => cambiarTamano(elegida.id, t.px)}
+                    onClick={() => cambiarMesa(elegida.id, { tamano: t.px })}
                     disabled={elegida.tamano === t.px}
                   >
                     {t.nombre} ({t.px})
+                  </button>
+                ))}
+              </p>
+
+              <p>Lugares</p>
+              <p>
+                {LUGARES.map((n) => (
+                  <button
+                    key={n}
+                    type="button"
+                    onClick={() => cambiarMesa(elegida.id, { lugares: n })}
+                    // las que vienen sin lugares se dibujan con 4 sillas
+                    disabled={(elegida.lugares || 4) === n}
+                  >
+                    {n}
                   </button>
                 ))}
               </p>
