@@ -1,4 +1,4 @@
-  import expres from "expres";
+  import express from "express";
 
     import mesas from "../controllers/mesa.js";
     import platos from "../controllers/platos.js";
