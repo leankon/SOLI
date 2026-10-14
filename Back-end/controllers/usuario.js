@@ -31,11 +31,11 @@ const getUsuario = async (req, res) => {
 
 const createUsuario = async (req, res) => {
   try {
-    const { nombre, apellido, dni, nombre_usuario, contraseña, rol } = req.body;
+    const { nombre, apellido, dni, nombre_usuario, contrasena, rol } = req.body;
     const result = await pool.query(
       `INSERT INTO usuario (nombre, apellido, dni, nombre_usuario, contraseña, rol)
        VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, nombre, apellido, dni, nombre_usuario, rol`,
-      [nombre, apellido, dni, nombre_usuario, contraseña, rol]
+      [nombre, apellido, dni, nombre_usuario, contrasena, rol]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {

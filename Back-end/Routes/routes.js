@@ -1,4 +1,4 @@
-  import expres from "expres";
+  import express from "express";
 
     import mesas from "../controllers/mesa.js";
     import platos from "../controllers/platos.js";
@@ -6,7 +6,7 @@
     import solicitudes from "../controllers/solicitud.js";
     import usuarios from "../controllers/usuario.js";
   
-    const router = expres.Router();
+    const router = express.Router();
   
   
   /* ------------------- Rutas ------------------- */
