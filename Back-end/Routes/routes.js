@@ -6,7 +6,7 @@
     import solicitudes from "../controllers/solicitud.js";
     import usuarios from "../controllers/usuario.js";
   
-    const router = expres.Router();
+    const router = express.Router();
   
   
   /* ------------------- Rutas ------------------- */
