@@ -3,7 +3,12 @@ import type { Solicitud, Mesa } from '../data/tipos'
 import { API } from '../data/constantes'
 import Llamado from '../components/Llamados'
 
-export default function PanelEncargado() {
+type Props = {
+  // quien apaga el llamado. viaja en el PUT
+  idUsuario: number
+}
+
+export default function PanelEncargado({ idUsuario }: Props) {
   const [solicitudes, setSolicitudes] = useState<Solicitud[]>([])
   const [listaMesas, setListaMesas] = useState<Mesa[]>([])
   const [cargando, setCargando] = useState(true)
@@ -42,10 +47,31 @@ export default function PanelEncargado() {
     return mesa === undefined ? idMesa : mesa.numero
   }
 
-  function atender(id: number) {
-    // por ahora solo la saco de la pantalla. para que quede atendida en la
-    // base hace falta un PUT que le cambie el estado
-    setSolicitudes(solicitudes.filter((s) => s.id !== id))
+  const atender = async (id: number) => {
+    const antes = solicitudes
+
+    // la saco de la pantalla ya, sin esperar la respuesta
+    setSolicitudes(solicitudes.map((s) => (s.id === id ? { ...s, estado: 'atendida' } : s)))
+
+    try {
+      const response = await fetch(API + '/solicitudes/' + id, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // no se borra: queda guardada como atendida
+        body: JSON.stringify({ estado: 'atendida', id_usuario: idUsuario }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Error al atender el llamado')
+      }
+    } catch (error) {
+      console.error('Hubo un error:', error)
+      // vuelvo atras: si no se guardo, la mesa sigue esperando
+      setSolicitudes(antes)
+      alert('No se pudo apagar el llamado. Fijate la conexion.')
+    }
   }
 
   if (cargando) {
