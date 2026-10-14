@@ -43,11 +43,14 @@ export type Rol = 'mozo' | 'encargado'
 
 // el email no esta aca: es el mismo para todo el restaurante.
 // lo que distingue a una persona de otro es la contraseña
+// la persona que entro, como la devuelve POST /login.
+// la contraseña no viaja de vuelta: la chequea el back y listo
 export type Usuario = {
   id: number
   nombre: string
   rol: Rol
-  password: string
+  // solo la usa la lista de prueba de crear rol, hasta que lea /usuarios
+  password?: string
 }
 
 // una linea de la cuenta, como la devuelve GET /mesas/:id/pedido.
