@@ -1,39 +1,52 @@
+  import expres from "express";
+
+    import mesas from "../controllers/mesa.js";
+    import platos from "../controllers/platos.js";
+    import pedidos from "../controllers/pide.js";
+    import solicitudes from "../controllers/solicitud.js";
+    import usuarios from "../controllers/usuario.js";
+  
+    const router = express.Router();
+  
+  
   /* ------------------- Rutas ------------------- */
 
 
   // Mesas
-  app.get("/mesas", mesas.getMesas);
-  app.get("/mesas/:id", mesas.getMesa);
-  app.post("/mesas", mesas.createMesa);
-  app.put("/mesas/:id", mesas.updateMesa);
-  app.delete("/mesas/:id", mesas.deleteMesa);
+  router.get("/mesas", mesas.getMesas);
+  router.get("/mesas/:id", mesas.getMesa);
+  router.post("/mesas", mesas.createMesa);
+  router.put("/mesas/:id", mesas.updateMesa);
+  router.delete("/mesas/:id", mesas.deleteMesa);
 
   // Usuarios
-  app.get("/usuarios", usuarios.getUsuarios);
-  app.get("/usuarios/:id", usuarios.getUsuario);
-  app.post("/usuarios", usuarios.createUsuario);
-  app.put("/usuarios/:id", usuarios.updateUsuario);
-  app.delete("/usuarios/:id", usuarios.deleteUsuario);
+  router.get("/usuarios", usuarios.getUsuarios);
+  router.get("/usuarios/:id", usuarios.getUsuario);
+  router.post("/usuarios", usuarios.createUsuario);
+  router.put("/usuarios/:id", usuarios.updateUsuario);
+  router.delete("/usuarios/:id", usuarios.deleteUsuario);
 
-  app.post("/login", usuarios.login);
+  router.post("/login", usuarios.login);
   
 
   // Platos
-  app.get("/platos", platos.getPlatos);
-  app.get("/platos/:id", platos.getPlato);
-  app.post("/platos", platos.createPlato);
-  app.put("/platos/:id", platos.updatePlato);
-  app.delete("/platos/:id", platos.deletePlato);
+  router.get("/platos", platos.getPlatos);
+  router.get("/platos/:id", platos.getPlato);
+  router.post("/platos", platos.createPlato);
+  router.put("/platos/:id", platos.updatePlato);
+  router.delete("/platos/:id", platos.deletePlato);
 
   // Solicitudes
-  app.get("/solicitudes", solicitudes.getSolicitudes);
-  app.get("/solicitudes/:id", solicitudes.getSolicitud);
-  app.post("/solicitudes", solicitudes.createSolicitud);
-  app.put("/solicitudes/:id", solicitudes.updateSolicitud);
-  app.delete("/solicitudes/:id", solicitudes.deleteSolicitud);
+  router.get("/solicitudes", solicitudes.getSolicitudes);
+  router.get("/solicitudes/:id", solicitudes.getSolicitud);
+  router.post("/solicitudes", solicitudes.createSolicitud);
+  router.put("/solicitudes/:id", solicitudes.updateSolicitud);
+  router.delete("/solicitudes/:id", solicitudes.deleteSolicitud);
 
   // Pide (pedidos)
-  app.get("/pide", pedidos.getPide);
-  app.get("/mesas/:id/pedido", pedidos.getPideByMesa);
-  app.post("/pide", pedidos.createPide);
-  app.delete("/pide/:id", pedidos.deletePide);
+  router.get("/pide", pedidos.getPide);
+  router.get("/mesas/:id/pedido", pedidos.getPideByMesa);
+  router.post("/pide", pedidos.createPide);
+  router.delete("/pide/:id", pedidos.deletePide);
+
+  export default router;

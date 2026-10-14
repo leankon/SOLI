@@ -1,16 +1,13 @@
   import express from "express";
   import cors from "cors";
+  import router from "./Routes/routes.js";
   const app = express();
   const port = 3000;
 
-  import mesas from "./controllers/mesa.js";
-  import platos from "./controllers/platos.js";
-  import pedidos from "./controllers/pide.js";
-  import solicitudes from "./controllers/solicitud.js";
-  import usuarios from "./controllers/usuario.js";
 
   app.use(cors());
   app.use(express.json());
+  app.use(router);
 
   app.get("/", (_, res) => {
     res.send("SOLI API working!");
