@@ -72,32 +72,34 @@ const deleteUsuario = async (req, res) => {
     }
     res.json({ mensaje: "Usuario eliminado" });
   } catch (err) {
-    console.error(err);
+    console.error(err);   
     res.status(500).json({ error: "Error al eliminar el usuario" });
   }
 };
 
 const login = async (req, res) => {
-
 try{
- const {email, contraseña} = req.body
- const respuesta = await pool.query ("SELECT  id, nombre, apellido, nombre_usuario, rol FROM  usuario WHERE nombre_usuario =$1 AND contrasena =$2.")
+ const {email, contrasena} = req.body;
+ const respuesta = await pool.query("SELECT id, nombre, apellido, nombre_usuario, rol FROM usuario WHERE nombre_usuario = $1 AND contraseña = $2", [email, contrasena]);
 
+ if (respuesta.rows.length===0){
 
+  return res.status(401).json({error:"Usuario o contraseña incorrecta"})
+ }
+ res.json(respuesta.rows[0]);
 
 }
-
-
 catch (err)  {
-
+  console.error(err);
+  res.status(500).json({ error: "Error al iniciar sesion" });
 
 }
-
-
-
 
 }
 
 
 
 export default { getUsuarios, getUsuario, createUsuario, updateUsuario, deleteUsuario , login };
+
+
+
