@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { Usuario } from '../data/tipos'
-import { usuarios } from '../data/usuarios'
-import { EMAIL_RESTAURANTE } from '../data/constantes'
+import { API } from '../data/constantes'
 
 type Props = {
   setUsuario: (usuario: Usuario) => void
@@ -12,9 +11,10 @@ export default function Login({ setUsuario }: Props) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [entrando, setEntrando] = useState(false)
   const navigate = useNavigate()
 
-  function entrar(e: React.FormEvent) {
+  const entrar = async (e: React.FormEvent) => {
     // sin esto el navegador recarga la pagina entera y se pierde todo
     e.preventDefault()
 
@@ -23,20 +23,44 @@ export default function Login({ setUsuario }: Props) {
       return
     }
 
-    // esto lo va a hacer el back buscar de quien es esa contraseña
-    const usuario = usuarios.find((u) => u.password === password)
+    setEntrando(true)
+    setError('')
 
-    if (email !== EMAIL_RESTAURANTE || usuario === undefined) {
-      setError('Email o contraseña incorrectos')
-      return
-    }
+    try {
+      const response = await fetch(API + '/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // contrasena sin ñ: asi lo lee el back
+        body: JSON.stringify({ email: email, contrasena: password }),
+      })
 
-    setUsuario(usuario)
+      // 401 no es un error de la pagina: es que los datos no coinciden
+      if (response.status === 401) {
+        setError('Email o contraseña incorrectos')
+        setEntrando(false)
+        return
+      }
 
-    if (usuario.rol === 'mozo') {
-      navigate('/mozo')
-    } else {
-      navigate('/encargado')
+      if (!response.ok) {
+        throw new Error('Error al iniciar sesion')
+      }
+
+      // el back devuelve mas cosas (apellido, nombre_usuario). me quedo
+      // con lo que usan las pantallas
+      const data = await response.json()
+      setUsuario({ id: data.id, nombre: data.nombre, rol: data.rol })
+
+      if (data.rol === 'mozo') {
+        navigate('/mozo')
+      } else {
+        navigate('/encargado')
+      }
+    } catch (error) {
+      console.error('Hubo un error:', error)
+      setError('No se pudo entrar. Fijate la conexion.')
+      setEntrando(false)
     }
   }
 
@@ -58,7 +82,9 @@ export default function Login({ setUsuario }: Props) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit">Entrar</button>
+        <button type="submit" disabled={entrando}>
+          {entrando ? 'Entrando...' : 'Entrar'}
+        </button>
       </form>
 
       {error && <p>{error}</p>}
