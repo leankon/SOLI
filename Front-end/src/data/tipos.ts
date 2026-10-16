@@ -45,14 +45,17 @@ export type Rol = 'mozo' | 'encargado'
 // lo que distingue a una persona de otro es la contraseña
 // la persona que entro, como la devuelve POST /login.
 // la contraseña no viaja de vuelta: la chequea el back y listo
+// la persona que entro, como la devuelve POST /login.
+// la contraseña no viaja de vuelta: la chequea el back y listo
 export type Usuario = {
   id: number
   nombre: string
   rol: Rol
-  // solo la usa la lista de prueba de crear rol, hasta que lea /usuarios
+  // el email con el que entro. sus mozos entran con el mismo
+  email: string
+  // solo la usa la lista de prueba de usuarios.ts
   password?: string
 }
-
 // una linea de la cuenta, como la devuelve GET /mesas/:id/pedido.
 // el back ya hace el JOIN, por eso viene el nombre y el precio del plato
 // y no el id: no hay que cruzar nada aca

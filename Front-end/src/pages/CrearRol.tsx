@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import type { Rol } from '../data/tipos'
-import { API, EMAIL_RESTAURANTE } from '../data/constantes'
+import { API,  } from '../data/constantes'
 
 // una persona como la devuelve GET /usuarios. la contraseña no viene
 type Persona = {
@@ -12,9 +12,11 @@ type Persona = {
 
 type Props = {
   miId: number
+  // el email del encargado: sus mozos entran con el mismo
+  miEmail: string
 }
 
-export default function CrearRol({ miId }: Props) {
+export default function CrearRol({ miId, miEmail }: Props) {
   const [lista, setLista] = useState<Persona[]>([])
   const [cargando, setCargando] = useState(true)
   const [nombre, setNombre] = useState('')
@@ -53,8 +55,8 @@ export default function CrearRol({ miId }: Props) {
           apellido: apellido,
           dni: dni,
           // todos entran con el mismo email: lo que cambia es la contrasena
-          nombre_usuario: EMAIL_RESTAURANTE,
-          // con ñ porque asi la lee hoy el back. si martin la pasa a
+          nombre_usuario: miEmail,
+          // con n porque asi la lee hoy el back. si martin la pasa a
           // contrasena, se cambia solo esta palabra
           contrasena: password,
           rol: rol,
@@ -106,7 +108,7 @@ export default function CrearRol({ miId }: Props) {
   return (
     <div>
       <h1>Crear rol</h1>
-      <p>Todos entran con el email {EMAIL_RESTAURANTE}. Lo que cambia es la contrasena.</p>
+      <p>Todos entran con el email {miEmail}. Lo que cambia es la contrasena.</p>
 
       <form onSubmit={crear}>
         <p>

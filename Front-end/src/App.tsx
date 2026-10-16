@@ -22,7 +22,10 @@ export default function App() {
 
   // 0 es "nadie". a crear rol nunca le va a llegar 0, porque soloPara frena antes
   const miId = usuario === null ? 0 : usuario.id
-
+  
+  // los mozos que crea el encargado entran con su mismo email
+  const miEmail = usuario === null ? '' : usuario.email
+  
   const login = <Login setUsuario={setUsuario} />
 
   function soloPara(necesita: string, pagina: ReactNode) {

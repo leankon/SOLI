@@ -50,8 +50,7 @@ export default function Login({ setUsuario }: Props) {
       // el back devuelve mas cosas (apellido, nombre_usuario). me quedo
       // con lo que usan las pantallas
       const data = await response.json()
-      setUsuario({ id: data.id, nombre: data.nombre, rol: data.rol })
-
+      setUsuario({ id: data.id, nombre: data.nombre, rol: data.rol, email: data.nombre_usuario })
       if (data.rol === 'mozo') {
         navigate('/mozo')
       } else {
