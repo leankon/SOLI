@@ -22,6 +22,9 @@ export default function App() {
 
   // 0 es "nadie". a crear rol nunca le va a llegar 0, porque soloPara frena antes
   const miId = usuario === null ? 0 : usuario.id
+  
+  // los mozos que crea el encargado entran con su mismo email
+  const miEmail = usuario === null ? '' : usuario.email
 
   const login = <Login setUsuario={setUsuario} />
 
@@ -40,8 +43,8 @@ export default function App() {
         <Route path="/mozo" element={soloPara('mozo', <VistaMozo />)} />
         <Route path="/encargado" element={soloPara('encargado', <PanelEncargado idUsuario={miId} />)} />
         <Route path="/plano" element={soloPara('encargado', <EditorPlano idUsuario={miId} />)} />
-        <Route path="/catalogo" element={soloPara('encargado', <Catalogo />)} />
-        <Route path="/crear-rol" element={soloPara('encargado', <CrearRol miId={miId} />)} />
+        <Route path="/catalogo" element={soloPara('encargado', <Catalogo idUsuario={miId} />)} />
+        <Route path="/crear-rol" element={soloPara('encargado', <CrearRol miId={miId} miEmail={miEmail} />)} />
 
         <Route path="/simulador" element={<Simulador />} />
 
