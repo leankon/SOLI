@@ -25,7 +25,7 @@ export default function App() {
   
   // los mozos que crea el encargado entran con su mismo email
   const miEmail = usuario === null ? '' : usuario.email
-  
+
   const login = <Login setUsuario={setUsuario} />
 
   function soloPara(necesita: string, pagina: ReactNode) {
@@ -44,7 +44,7 @@ export default function App() {
         <Route path="/encargado" element={soloPara('encargado', <PanelEncargado idUsuario={miId} />)} />
         <Route path="/plano" element={soloPara('encargado', <EditorPlano idUsuario={miId} />)} />
         <Route path="/catalogo" element={soloPara('encargado', <Catalogo idUsuario={miId} />)} />
-        <Route path="/crear-rol" element={soloPara('encargado', <CrearRol miId={miId} />)} />
+        <Route path="/crear-rol" element={soloPara('encargado', <CrearRol miId={miId} miEmail={miEmail} />)} />
 
         <Route path="/simulador" element={<Simulador />} />
 
