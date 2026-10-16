@@ -1,53 +1,106 @@
-import { useState } from 'react'
-import type { Usuario, Rol } from '../data/tipos'
-import { usuarios as usuariosIniciales } from '../data/usuarios'
-import { EMAIL_RESTAURANTE } from '../data/constantes'
+import { useState, useEffect } from 'react'
+import type { Rol } from '../data/tipos'
+import { API, EMAIL_RESTAURANTE } from '../data/constantes'
+
+// una persona como la devuelve GET /usuarios. la contraseña no viene
+type Persona = {
+  id: number
+  nombre: string
+  apellido: string
+  rol: Rol
+}
 
 type Props = {
   miId: number
 }
 
 export default function CrearRol({ miId }: Props) {
-  const [lista, setLista] = useState(usuariosIniciales)
+  const [lista, setLista] = useState<Persona[]>([])
+  const [cargando, setCargando] = useState(true)
   const [nombre, setNombre] = useState('')
+  const [apellido, setApellido] = useState('')
+  const [dni, setDni] = useState('')
   const [rol, setRol] = useState<Rol>('mozo')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
-  function crear(e: React.FormEvent) {
+  useEffect(() => {
+    fetch(API + '/usuarios')
+      .then((r) => r.json())
+      .then((datos) => {
+        setLista(datos)
+        setCargando(false)
+      })
+  }, [])
+
+  const crear = async (e: React.FormEvent) => {
+    // sin esto el navegador recarga la pagina entera y se pierde todo
     e.preventDefault()
 
-    if (nombre === '' || password === '') {
-      setError('Completa el nombre y la contrasena')
+    if (nombre === '' || apellido === '' || password === '') {
+      setError('Completa el nombre, el apellido y la contrasena')
       return
     }
 
-    // la contrasena es lo unico que distingue a una persona de otra,
-    // porque el email es el mismo para todo el restaurante
-    if (lista.some((u) => u.password === password)) {
-      setError('Esa contrasena ya la usa otra persona')
-      return
-    }
+    try {
+      const response = await fetch(API + '/usuarios', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nombre: nombre,
+          apellido: apellido,
+          dni: dni,
+          // todos entran con el mismo email: lo que cambia es la contrasena
+          nombre_usuario: EMAIL_RESTAURANTE,
+          // con ñ porque asi la lee hoy el back. si martin la pasa a
+          // contrasena, se cambia solo esta palabra
+          contrasena: password,
+          rol: rol,
+        }),
+      })
 
-    const nuevo: Usuario = {
-      id: Math.max(0, ...lista.map((u) => u.id)) + 1,
-      nombre,
-      rol,
-      password,
-    }
+      if (!response.ok) {
+        throw new Error('Error al crear la persona')
+      }
 
-    setLista([...lista, nuevo])
-    setNombre('')
-    setPassword('')
-    setError('')
+      // del back solo uso el id: el resto ya lo tengo en el formulario
+      const data = await response.json()
+      setLista([...lista, { id: data.id, nombre, apellido, rol }])
+
+      setNombre('')
+      setApellido('')
+      setDni('')
+      setPassword('')
+      setError('')
+    } catch (error) {
+      console.error('Hubo un error:', error)
+      setError('No se pudo crear. Fijate la conexion.')
+    }
   }
 
-  function borrar(id: number) {
+  const borrar = async (id: number) => {
     // no muestro el boton de borrar en mi propia fila, pero lo chequeo aca
     // igual: la pantalla puede cambiar, la regla no
     if (id === miId) return
 
+    const antes = lista
     setLista(lista.filter((u) => u.id !== id))
+
+    try {
+      const response = await fetch(API + '/usuarios/' + id, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) {
+        throw new Error('Error al borrar la persona')
+      }
+    } catch (error) {
+      console.error('Hubo un error:', error)
+      setLista(antes)
+      alert('No se pudo borrar. Fijate la conexion.')
+    }
   }
 
   return (
@@ -59,6 +112,16 @@ export default function CrearRol({ miId }: Props) {
         <p>
           Nombre{' '}
           <input value={nombre} onChange={(e) => setNombre(e.target.value)} />
+        </p>
+
+        <p>
+          Apellido{' '}
+          <input value={apellido} onChange={(e) => setApellido(e.target.value)} />
+        </p>
+
+        <p>
+          DNI{' '}
+          <input value={dni} onChange={(e) => setDni(e.target.value)} />
         </p>
 
         <p>
@@ -84,20 +147,25 @@ export default function CrearRol({ miId }: Props) {
       </form>
 
       <h2>Personas cargadas ({lista.length})</h2>
-      <ul>
-        {lista.map((u) => (
-          <li key={u.id}>
-            {u.nombre} — {u.rol}{' '}
-            {u.id === miId ? (
-              <span>(sos vos)</span>
-            ) : (
-              <button type="button" onClick={() => borrar(u.id)}>
-                Borrar
-              </button>
-            )}
-          </li>
-        ))}
-      </ul>
+
+      {cargando ? (
+        <p>Buscando las personas...</p>
+      ) : (
+        <ul>
+          {lista.map((u) => (
+            <li key={u.id}>
+              {u.nombre} {u.apellido} — {u.rol}{' '}
+              {u.id === miId ? (
+                <span>(sos vos)</span>
+              ) : (
+                <button type="button" onClick={() => borrar(u.id)}>
+                  Borrar
+                </button>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   )
 }
