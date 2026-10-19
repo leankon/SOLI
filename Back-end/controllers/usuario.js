@@ -90,7 +90,11 @@ try{
  const usuario =respuesta.rows[0];
 
   const payload= {id: usuario.id, rol:usuario.rol};
-  const secretK ey = process.env. JWT_SECRET;
+  const secretKey = process.env. JWT_SECRET;
+  const options = {expiresIn: '8h'};
+  const token = {payload,secretKey, options};
+  res.json ({...usuario})
+
 
 }
 catch (err)  {
@@ -100,8 +104,6 @@ catch (err)  {
 }
 
 }
-
-
 
 export default { getUsuarios, getUsuario, createUsuario, updateUsuario, deleteUsuario , login };
 
