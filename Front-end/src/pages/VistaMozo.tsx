@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react'
 import type { Mesa as DatosMesa, EstadoMesa, Solicitud } from '../data/tipos'
 import { API } from '../data/constantes'
+import { useSesion } from '../context/SesionContext'
 import Mesa from '../components/mesa'
 import Llamado from '../components/Llamados'
 import PopUp from '../components/PopUp'
 import Cuenta from '../components/Cuenta'
 
 export default function VistaMozo() {
+  // los headers con el token de quien entro
+  const { cabeceras } = useSesion()
   const [listaMesas, setListaMesas] = useState<DatosMesa[]>([])
   const [solicitudes, setSolicitudes] = useState<Solicitud[]>([])
   const [cargando, setCargando] = useState(true)
@@ -23,9 +26,8 @@ export default function VistaMozo() {
         // pido las dos juntas: el plano sale de las mesas y los llamados de
         // las solicitudes, que son tablas distintas
         const [datosMesas, datosSolicitudes] = await Promise.all([
-          fetch(API + '/mesas').then((r) => r.json()),
-          fetch(API + '/solicitudes').then((r) => r.json()),
-        ])
+          fetch(API + '/mesas', { headers: cabeceras() }).then((r) => r.json()),     
+          fetch(API + '/solicitudes', { headers: cabeceras() }).then((r) => r.json()),])
 
         setListaMesas(datosMesas)
         setSolicitudes(datosSolicitudes)
@@ -91,9 +93,7 @@ export default function VistaMozo() {
     try {
       const response = await fetch(API + '/mesas/' + id, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: cabeceras(),
         body: JSON.stringify(actualizada),
       })
 

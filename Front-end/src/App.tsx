@@ -1,6 +1,4 @@
-import { useState } from 'react'
 import type { ReactNode } from 'react'
-import type { Usuario } from './data/tipos'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Login from './pages/Login'
 import VistaMozo from './pages/VistaMozo'
@@ -10,23 +8,18 @@ import Catalogo from './pages/Catalogo'
 import CrearRol from './pages/CrearRol'
 import Simulador from './pages/Simulador'
 import Nav from './components/Nav'
+import { useSesion } from './context/SesionContext'
 
 export default function App() {
-  // guardo la persona entera y no solo el rol, porque crear rol necesita saber
-  // quien esta adentro para no dejar que se borre a si mismo
-  const [usuario, setUsuario] = useState<Usuario | null>(null)
+  // quien entro vive en el context: aca solo lo leo para saber que
+  // pantallas puede ver
+  const { usuario, salir } = useSesion()
 
   // el rol sale del usuario. si lo guardara aparte tendria el mismo dato en dos
   // lugares y tarde o temprano uno de los dos queda viejo
   const rol = usuario === null ? '' : usuario.rol
 
-  // 0 es "nadie". a crear rol nunca le va a llegar 0, porque soloPara frena antes
-  const miId = usuario === null ? 0 : usuario.id
-  
-  // los mozos que crea el encargado entran con su mismo email
-  const miEmail = usuario === null ? '' : usuario.email
-
-  const login = <Login setUsuario={setUsuario} />
+  const login = <Login />
 
   function soloPara(necesita: string, pagina: ReactNode) {
     if (rol === '') return login
@@ -36,15 +29,15 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <Nav rol={rol} onSalir={() => setUsuario(null)} />
+      <Nav rol={rol} onSalir={salir} />
       <Routes>
         <Route path="/" element={login} />
         <Route path="/login" element={login} />
         <Route path="/mozo" element={soloPara('mozo', <VistaMozo />)} />
-        <Route path="/encargado" element={soloPara('encargado', <PanelEncargado idUsuario={miId} />)} />
-        <Route path="/plano" element={soloPara('encargado', <EditorPlano idUsuario={miId} />)} />
-        <Route path="/catalogo" element={soloPara('encargado', <Catalogo idUsuario={miId} />)} />
-        <Route path="/crear-rol" element={soloPara('encargado', <CrearRol miId={miId} miEmail={miEmail} />)} />
+        <Route path="/encargado" element={soloPara('encargado', <PanelEncargado />)} />
+        <Route path="/plano" element={soloPara('encargado', <EditorPlano />)} />
+        <Route path="/catalogo" element={soloPara('encargado', <Catalogo />)} />
+        <Route path="/crear-rol" element={soloPara('encargado', <CrearRol />)} />
 
         <Route path="/simulador" element={<Simulador />} />
 

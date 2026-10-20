@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import type { Mesa, Plato, LineaPedido } from '../data/tipos'
 import { API } from '../data/constantes'
+import { useSesion } from '../context/SesionContext'
 import './PopUp.css'
 import './Cuenta.css'
 
@@ -15,6 +16,8 @@ type Props = {
 }
 
 export default function Cuenta({ mesa, onCerrar }: Props) {
+  // los headers con el token de quien entro
+  const { cabeceras } = useSesion()
   const [platos, setPlatos] = useState<Plato[]>([])
   const [lineas, setLineas] = useState<LineaPedido[]>([])
   const [cantidades, setCantidades] = useState<Record<number, number>>({})
@@ -24,10 +27,9 @@ export default function Cuenta({ mesa, onCerrar }: Props) {
   useEffect(() => {
     // el menu y lo que la mesa ya pidio, los dos juntos
     Promise.all([
-      fetch(API + '/platos').then((r) => r.json()),
-      fetch(API + '/mesas/' + mesa.id + '/pedido').then((r) => r.json()),
-    ]).then(([datosPlatos, datosPedido]) => {
-      setPlatos(datosPlatos.map((p: Plato) => ({ ...p, precio: Number(p.precio) })))
+      fetch(API + '/platos', { headers: cabeceras() }).then((r) => r.json()),
+      fetch(API + '/mesas/' + mesa.id + '/pedido', { headers: cabeceras() }).then((r) => r.json()),
+    ]).then(([datosPlatos, datosPedido]) => {      setPlatos(datosPlatos.map((p: Plato) => ({ ...p, precio: Number(p.precio) })))
       setLineas(datosPedido.map((l: LineaPedido) => ({ ...l, precio: Number(l.precio) })))
       setCargando(false)
     })
@@ -50,10 +52,8 @@ export default function Cuenta({ mesa, onCerrar }: Props) {
   const agregarPlato = async (plato: Plato) => {
     try {
       const response = await fetch(API + '/pide', {
-         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        method: 'POST',
+        headers: cabeceras(),
         // la hora y la fecha las pone el back con CURRENT_TIME y CURRENT_DATE
         body: JSON.stringify({
           mesa_id: mesa.id,
@@ -95,6 +95,7 @@ export default function Cuenta({ mesa, onCerrar }: Props) {
     try {
       const response = await fetch(API + '/pide/' + idLinea, {
          method: 'DELETE',
+         headers: cabeceras(),
       })
 
       if (!response.ok) {

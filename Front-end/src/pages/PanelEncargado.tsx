@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react'
 import type { Solicitud, Mesa } from '../data/tipos'
 import { API } from '../data/constantes'
+import { useSesion } from '../context/SesionContext'
 import Llamado from '../components/Llamados'
 
-type Props = {
-  // quien apaga el llamado. viaja en el PUT
-  idUsuario: number
-}
+export default function PanelEncargado() {
+  // quien esta adentro y los headers con su token
+  const { usuario, cabeceras } = useSesion()
+  // hasta que el back lea el id del token lo sigo mandando en el body
+  const idUsuario = usuario === null ? 0 : usuario.id
 
-export default function PanelEncargado({ idUsuario }: Props) {
   const [solicitudes, setSolicitudes] = useState<Solicitud[]>([])
   const [listaMesas, setListaMesas] = useState<Mesa[]>([])
   const [cargando, setCargando] = useState(true)
@@ -18,8 +19,8 @@ export default function PanelEncargado({ idUsuario }: Props) {
       // pido las dos cosas de una. necesito las mesas porque la solicitud
       // guarda el id de la mesa y yo tengo que mostrar el numero
       Promise.all([
-        fetch(API + '/solicitudes').then((r) => r.json()),
-        fetch(API + '/mesas').then((r) => r.json()),
+        fetch(API + '/solicitudes', { headers: cabeceras() }).then((r) => r.json()),
+        fetch(API + '/mesas', { headers: cabeceras() }).then((r) => r.json()),
       ]).then(([datosSolicitudes, datosMesas]) => {
         setSolicitudes(datosSolicitudes)
         setListaMesas(datosMesas)
@@ -56,9 +57,7 @@ export default function PanelEncargado({ idUsuario }: Props) {
     try {
       const response = await fetch(API + '/solicitudes/' + id, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: cabeceras(),
         // no se borra: queda guardada como atendida
         body: JSON.stringify({ estado: 'atendida', id_usuario: idUsuario }),
       })
