@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import type { Rol } from '../data/tipos'
-import { API,  } from '../data/constantes'
+import { API } from '../data/constantes'
+import { useSesion } from '../context/SesionContext'
 
 // una persona como la devuelve GET /usuarios. la contraseña no viene
 type Persona = {
@@ -10,13 +11,12 @@ type Persona = {
   rol: Rol
 }
 
-type Props = {
-  miId: number
-  // el email del encargado: sus mozos entran con el mismo
-  miEmail: string
-}
-
-export default function CrearRol({ miId, miEmail }: Props) {
+export default function CrearRol() {
+  const { usuario, cabeceras } = useSesion()
+  // para no dejar que el encargado se borre a si mismo
+  const miId = usuario === null ? 0 : usuario.id
+  // los mozos que crea entran con su mismo email
+  const miEmail = usuario === null ? '' : usuario.email
   const [lista, setLista] = useState<Persona[]>([])
   const [cargando, setCargando] = useState(true)
   const [nombre, setNombre] = useState('')
@@ -27,7 +27,7 @@ export default function CrearRol({ miId, miEmail }: Props) {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    fetch(API + '/usuarios')
+    fetch(API + '/usuarios', { headers: cabeceras() })
       .then((r) => r.json())
       .then((datos) => {
         setLista(datos)
@@ -47,9 +47,7 @@ export default function CrearRol({ miId, miEmail }: Props) {
     try {
       const response = await fetch(API + '/usuarios', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: cabeceras(),
         body: JSON.stringify({
           nombre: nombre,
           apellido: apellido,
@@ -93,6 +91,7 @@ export default function CrearRol({ miId, miEmail }: Props) {
     try {
       const response = await fetch(API + '/usuarios/' + id, {
         method: 'DELETE',
+        headers: cabeceras(),
       })
 
       if (!response.ok) {

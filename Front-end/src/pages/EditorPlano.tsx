@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import type { Mesa as DatosMesa } from '../data/tipos'
 import { API, tamano_MESA } from '../data/constantes'
+import { useSesion } from '../context/SesionContext'
 import Mesa from '../components/mesa'
 
 // el mismo tamano que tiene .plano en el css
@@ -26,13 +27,11 @@ const LUGARES = [2, 4, 6]
 // cuanto se corre cada mesa nueva para no taparse con la anterior:
 // la mesa, las sillas de los dos lados y un poco de aire
 const PASO = tamano_MESA + 40
-
-type Props = {
-  // quien esta editando. viaja en cada cambio que se guarda
-  idUsuario: number
-}
-
-export default function EditorPlano({ idUsuario }: Props) {
+export default function EditorPlano() {
+  // quien esta adentro y los headers con su token
+  const { usuario, cabeceras } = useSesion()
+  // hasta que el back lea el id del token lo sigo mandando en el body
+  const idUsuario = usuario === null ? 0 : usuario.id
   const [listaMesas, setListaMesas] = useState<DatosMesa[]>([])
   // como estan las mesas en la base. comparando con esta se cuales cambie
   const [guardadas, setGuardadas] = useState<DatosMesa[]>([])
@@ -51,8 +50,8 @@ export default function EditorPlano({ idUsuario }: Props) {
   })
 
   useEffect(() => {
-    fetch(API + '/mesas')
-      .then((r) => r.json())
+    fetch(API + '/mesas', { headers: cabeceras() })
+          .then((r) => r.json())
       .then((datos) => {
         setListaMesas(datos)
         setGuardadas(datos)
@@ -113,9 +112,7 @@ export default function EditorPlano({ idUsuario }: Props) {
     try {
       const response = await fetch(API + '/mesas', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: cabeceras(),
         body: JSON.stringify(nueva),
       })
 
@@ -138,9 +135,7 @@ export default function EditorPlano({ idUsuario }: Props) {
     try {
       const response = await fetch(API + '/mesas/' + id, {
         method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: cabeceras(),
         body: JSON.stringify({ id_usuario: idUsuario }),
       })
 

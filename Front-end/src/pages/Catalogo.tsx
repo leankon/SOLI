@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react'
 import type { Plato } from '../data/tipos'
 import { API } from '../data/constantes'
+import { useSesion } from '../context/SesionContext'
 
 // 8500 se lee mal. $8.500 se lee de un vistazo
 function plata(n: number) {
   return '$' + n.toLocaleString('es-AR')
 }
 
-type Props = {
-  // quien carga el plato. viaja en cada cambio que se guarda
-  idUsuario: number
-}
-
-export default function Catalogo({ idUsuario }: Props) {
+export default function Catalogo() {
+  // quien esta adentro y los headers con su token
+  const { usuario, cabeceras } = useSesion()
+  // hasta que el back lea el id del token lo sigo mandando en el body
+  const idUsuario = usuario === null ? 0 : usuario.id
   const [listaPlatos, setListaPlatos] = useState<Plato[]>([])
   const [cargando, setCargando] = useState(true)
 
@@ -27,8 +27,8 @@ export default function Catalogo({ idUsuario }: Props) {
   const [precioEditado, setPrecioEditado] = useState('')
 
   useEffect(() => {
-    fetch(API + '/platos')
-      .then((r) => r.json())
+    fetch(API + '/platos', { headers: cabeceras() })
+          .then((r) => r.json())
       .then((datos) => {
         // el precio viene como texto desde la base, lo paso a numero
         setListaPlatos(datos.map((p: Plato) => ({ ...p, precio: Number(p.precio) })))
@@ -42,9 +42,7 @@ export default function Catalogo({ idUsuario }: Props) {
     try {
       const response = await fetch(API + '/platos', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: cabeceras(),
         body: JSON.stringify({
           nombre: nombre,
           precio: Number(precio),
@@ -87,9 +85,7 @@ export default function Catalogo({ idUsuario }: Props) {
     try {
       const response = await fetch(API + '/platos/' + id, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: cabeceras(),
         // el PUT pisa todas las columnas: van el nombre y el precio juntos
         body: JSON.stringify({
           nombre: editado.nombre,
@@ -115,9 +111,7 @@ export default function Catalogo({ idUsuario }: Props) {
     try {
       const response = await fetch(API + '/platos/' + id, {
         method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: cabeceras(),
         body: JSON.stringify({ id_usuario: idUsuario }),
       })
 
