@@ -1,4 +1,5 @@
 import { pool } from "../db.js";
+import jwt from "jsonwebtoken";
 
 const getUsuarios = async (req, res) => {
   try {
@@ -86,7 +87,14 @@ try{
 
   return res.status(401).json({error:"Usuario o contraseña incorrecta"})
  }
- res.json(respuesta.rows[0]);
+ const usuario =respuesta.rows[0];
+
+  const payload= {id: usuario.id, rol:usuario.rol};
+  const secretKey = process.env.JWT_SECRET;
+  const options = {expiresIn: '8h'};
+  const token = jwt.sign  (payload,secretKey, options);
+  res.json ({...usuario, token})
+
 
 }
 catch (err)  {
@@ -96,8 +104,6 @@ catch (err)  {
 }
 
 }
-
-
 
 export default { getUsuarios, getUsuario, createUsuario, updateUsuario, deleteUsuario , login };
 
