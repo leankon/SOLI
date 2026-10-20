@@ -69,9 +69,7 @@ export default function EditorPlano() {
       for (const mesa of cambiadas) {
         const response = await fetch(API + '/mesas/' + mesa.id, {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: cabeceras(),
           body: JSON.stringify({ ...mesa, id_usuario: idUsuario }),
         })
 
