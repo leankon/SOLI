@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { API } from '../data/constantes'
 import { useSesion } from '../context/SesionContext'
-import { useSesion } from '../context/SesionContext'
 
 export default function Login() {
   // entrar guarda la persona y su token para toda la app
