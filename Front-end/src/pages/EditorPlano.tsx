@@ -223,7 +223,9 @@ export default function EditorPlano() {
             listaMesas.map((mesa) => (
               <Mesa
                 key={mesa.id}
-                mesa={mesa}
+                // en el editor el estado no importa: todas se ven libres,
+                // asi se ve el salon y no quien esta sentado
+                mesa={{ ...mesa, estado: 'vacia' }}
                 onClick={setIdElegida}
                 onMouseDown={agarrar}
                 seleccionada={mesa.id === idElegida}

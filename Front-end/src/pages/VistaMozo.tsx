@@ -56,11 +56,17 @@ export default function VistaMozo() {
   // una mesa esta llamando si tiene alguna solicitud pendiente. no lo guardo
   // en la base: lo calculo al dibujar. asi el plano y el panel salen de la
   // misma lista y no pueden decir cosas distintas
-  const mesasEnPantalla = listaMesas.map((m) =>
-    pendientes.some((s) => s.id_mesa === m.id)
-      ? { ...m, estado: 'llamando' as EstadoMesa }
-      : m
-  )
+  const mesasEnPantalla = listaMesas.map((m) => {
+    if (pendientes.some((s) => s.id_mesa === m.id)) {
+      return { ...m, estado: 'llamando' as EstadoMesa }
+    }
+    // 'llamando' no se guarda: sale de los llamados pendientes. si quedo
+    // guardado de antes y ya no hay llamados, la mesa sigue ocupada
+    if (m.estado === 'llamando') {
+      return { ...m, estado: 'ocupada' as EstadoMesa }
+    }
+    return m
+  })
 
   // busco la mesa cada vez que se dibuja. guardo el id y no la mesa entera:
   const mesaSeleccionada = mesasEnPantalla.find((m) => m.id === idSeleccionada)

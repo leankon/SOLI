@@ -1,10 +1,54 @@
-:root {
-    --gris: #dddddd;
-    --verde: #7dc47d;
-    --rojo: #e07b7b;
-    --texto: #333333;
-    --borde: #cccccc;
-    --fondo: #ffffff;
+/* los colores de SOLI. son los mismos nombres que la paleta del figma
+   ("SOLI paleta"), asi el diseño y el codigo hablan igual */
+   :root {
+    --fondo-pantalla: #f6f4fb;
+    --superficie: #ffffff;
+    --superficie-suave: #edeaf5;
+    --borde: #d5d0e4;
+    --texto: #342a4a;
+    --texto-secundario: #6a6490;
+    --texto-ayuda: #4a4e8f;
+    --acento: #4a4e8f;
+    --acento-suave: #e6e5f3;
+    --texto-sobre-acento: #ffffff;
+    --mesa-vacia: #dcd7ea;
+    --mesa-vacia-borde: #9a93b8;
+    --silla-respaldo: #8a84ac;
+    --silla-asiento: #c9c3dc;
+    --ocupada: #059669;
+    --llamando: #dc2626;
+    --llamando-suave: #fef1f1;
+    --texto-sobre-color: #ffffff;
+  
+    /* los nombres viejos siguen andando: apuntan a los nuevos. asi los
+       otros css toman la paleta sin tener que tocarlos todos juntos */
+    --fondo: var(--superficie);
+    --gris: var(--mesa-vacia);
+    --verde: var(--ocupada);
+    --rojo: var(--llamando);
+  }
+  
+  /* modo oscuro: los mismos nombres con otros colores. el boton de la
+     luna le pone data-theme="oscuro" al html y todo cambia solo */
+  :root[data-theme="oscuro"] {
+    --fondo-pantalla: #141c28;
+    --superficie: #1a2332;
+    --superficie-suave: #243040;
+    --borde: #2c3a4c;
+    --texto: #f1faee;
+    --texto-secundario: #9fb3b5;
+    --texto-ayuda: #9db7cc;
+    --acento: #a8dadc;
+    --acento-suave: #1d3546;
+    --texto-sobre-acento: #141c28;
+    --mesa-vacia: #243040;
+    --mesa-vacia-borde: #46566b;
+    --silla-respaldo: #46566b;
+    --silla-asiento: #6b7f93;
+    --ocupada: #22a06b;
+    --llamando: #e5484d;
+    --llamando-suave: #2e2029;
+    --texto-sobre-color: #ffffff;
   }
   
   * {
@@ -14,7 +58,7 @@
   body {
     margin: 0;
     padding: 20px;
-    background: var(--fondo);
+    background: var(--fondo-pantalla);
     color: var(--texto);
     font-family: Arial, Helvetica, sans-serif;
     font-size: 16px;
@@ -30,85 +74,134 @@
     font-size: 16px;
     cursor: pointer;
   }
-  /* el plano es la caja donde van las mesas.
-   position relative para que el left/top de cada mesa sea desde aca
-   y no desde la esquina de la pantalla */
-.plano {
-  position: relative;
-  width: 1000px;
-  height: 520px;
-  border: 1px solid var(--borde);
-  background: var(--fondo);
-  overflow: hidden;
-}
-/* la barra de arriba. flex pone los links en fila y gap los separa,
-   asi no quedan pegados uno atras del otro */
-   nav {
+  
+  /* la barra de arriba: SOLI a la izquierda, los links al medio y la sesion
+     a la derecha. los margenes negativos la estiran de borde a borde,
+     porque el body tiene 20px de padding */
+  nav {
     display: flex;
     align-items: center;
-    gap: 20px;
-    padding: 0 0 16px 0;
-    margin-bottom: 20px;
+    gap: 16px;
+    margin: -20px -20px 20px -20px;
+    padding: 12px 24px;
+    background: var(--superficie);
     border-bottom: 1px solid var(--borde);
   }
   
-  nav a {
-    color: var(--texto);
+  nav .marca {
+    font-size: 22px;
+    color: var(--acento);
+  }
+  
+  nav .links {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+  }
+  
+  nav .links a {
+    padding: 8px 14px;
+    border-radius: 8px;
+    color: var(--texto-ayuda);
     text-decoration: none;
   }
+  
+  /* el link de la pantalla en la que estas */
+  nav .links a.active {
+    background: var(--acento-suave);
+    color: var(--acento);
+    font-weight: bold;
+  }
+  
+  nav .sesion {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--texto-secundario);
+  }
+  
+  /* la luna y salir: botoncitos grises, el mismo estilo los dos */
+  .boton-barra {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background: var(--superficie-suave);
+    color: var(--texto);
+    font-size: 14px;
+    text-decoration: none;
+  }
+  
+  /* el plano es la caja donde van las mesas.
+     position relative para que el left/top de cada mesa sea desde aca
+     y no desde la esquina de la pantalla */
+  .plano {
+    position: relative;
+    width: 1000px;
+    height: 520px;
+    border: 1px solid var(--borde);
+    border-radius: 14px;
+    background: var(--superficie);
+    overflow: hidden;
+  }
+  
   /* el editor es plano a la izquierda, controles a la derecha.
-   flex los pone en fila y align-items: flex-start evita que el panel
-   se estire a lo alto del plano */
-.editor {
-  display: flex;
-  align-items: flex-start;
-  gap: 24px;
-}
-
-.editor-panel {
-  width: 300px;
-  flex-shrink: 0;
-  border: 1px solid var(--borde);
-  border-radius: 8px;
-  padding: 16px;
-}
-/* la vista del mozo: el salon a la izquierda y los llamados al costado */
-.mozo {
-  display: flex;
-  align-items: flex-start;
-  gap: 24px;
-}
-
-.panel-llamados {
-  width: 260px;
-  flex-shrink: 0;
-  /* la misma altura que el plano para que la fila cierre pareja */
-  height: 520px;
-  border: 1px solid var(--borde);
-  border-radius: 8px;
-  padding: 16px;
-  /* si entran muchos llamados scrollea esta cajita, no la pagina entera */
-  overflow-y: auto;
-}
-
-.panel-llamados h2 {
-  font-size: 18px;
-  margin: 0 0 12px 0;
-}
-
-/* el resumen de arriba: una pastilla por estado, del color del estado */
-.resumen {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.pastilla {
-  padding: 4px 12px;
-  border-radius: 999px;
-  font-size: 14px;
-}
-
-.pastilla-ocupada  { background: var(--verde); }
-.pastilla-llamando { background: var(--rojo); }
-.pastilla-vacia    { background: var(--gris); }
+     flex los pone en fila y align-items: flex-start evita que el panel
+     se estire a lo alto del plano */
+  .editor {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+  }
+  
+  .editor-panel {
+    width: 300px;
+    flex-shrink: 0;
+    background: var(--superficie);
+    border: 1px solid var(--borde);
+    border-radius: 14px;
+    padding: 16px;
+  }
+  
+  /* la vista del mozo: el salon a la izquierda y los llamados al costado */
+  .mozo {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+  }
+  
+  .panel-llamados {
+    width: 260px;
+    flex-shrink: 0;
+    /* la misma altura que el plano para que la fila cierre pareja */
+    height: 520px;
+    background: var(--superficie);
+    border: 1px solid var(--borde);
+    border-radius: 14px;
+    padding: 16px;
+    /* si entran muchos llamados scrollea esta cajita, no la pagina entera */
+    overflow-y: auto;
+  }
+  
+  .panel-llamados h2 {
+    font-size: 18px;
+    margin: 0 0 12px 0;
+  }
+  
+  /* el resumen de arriba: una pastilla por estado, del color del estado */
+  .resumen {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .pastilla {
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 14px;
+  }
+  
+  /* sobre verde o rojo fuerte el texto va blanco, si no no se lee */
+  .pastilla-ocupada  { background: var(--ocupada);  color: var(--texto-sobre-color); }
+  .pastilla-llamando { background: var(--llamando); color: var(--texto-sobre-color); }
+  .pastilla-vacia    { background: var(--mesa-vacia); color: var(--texto); }
