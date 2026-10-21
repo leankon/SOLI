@@ -132,6 +132,17 @@
     text-decoration: none;
   }
   
+    /* el boton de la luna y el sol: el icono toma el color del acento */
+    .boton-tema {
+      display: flex;
+      padding: 0.4rem;
+      color: var(--acento);
+    }
+  
+    .boton-tema svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
   /* el plano es la caja donde van las mesas.
      position relative para que el left/top de cada mesa sea desde aca
      y no desde la esquina de la pantalla */

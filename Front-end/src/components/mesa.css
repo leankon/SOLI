@@ -3,8 +3,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #999999;
+  border: 1.5px solid var(--mesa-vacia-borde);
+  border-radius: 8px;
   font-size: 18px;
+  font-weight: bold;
   font-family: inherit;
   color: var(--texto);
   /* estas dos son para apagar los estilos que traen por default */
@@ -13,19 +15,36 @@
 }
 
 .mesa-circular { border-radius: 50%; }
-.mesa-vacia    { background: var(--gris); }
-.mesa-ocupada  { background: var(--verde); }
-.mesa-llamando { background: var(--rojo); }
 
-.mesa:hover {
-  border-color: var(--texto);
-  border-width: 3px;
+/* los tres estados, con los colores de la paleta. sobre verde o rojo
+   el numero va blanco, si no no se lee */
+.mesa-vacia {
+  background: var(--mesa-vacia);
 }
 
-/* la mesa elegida en el editor */
+.mesa-ocupada {
+  background: var(--ocupada);
+  border-color: var(--ocupada);
+  color: var(--texto-sobre-color);
+}
+
+.mesa-llamando {
+  background: var(--llamando);
+  border-color: var(--llamando);
+  color: var(--texto-sobre-color);
+}
+
+.mesa:hover {
+  border-color: var(--acento);
+  border-width: 2px;
+}
+
+/* la mesa elegida en el editor: como la "Mesa 1" del figma */
 .mesa.mesa-seleccionada {
-  border-color: #3366cc;
+  background: var(--acento-suave);
+  border-color: var(--acento);
   border-width: 3px;
+  color: var(--acento);
 }
 
 /* la caja que contiene la mesa y sus sillas. es mas grande que la mesa
@@ -48,7 +67,7 @@
   width: 16px;
   height: 4px;
   border-radius: 2px;
-  background: #a6a6a6;
+  background: var(--silla-respaldo);
 }
 
 .silla .asiento {
@@ -58,5 +77,5 @@
   width: 13px;
   height: 7px;
   border-radius: 2px;
-  background: #dadada;
-}
+  background: var(--silla-asiento);
+} 

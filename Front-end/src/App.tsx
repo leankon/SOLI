@@ -29,8 +29,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <Nav rol={rol} onSalir={salir} />
-      <Routes>
+      <Nav rol={rol} nombre={usuario === null ? '' : usuario.nombre} onSalir={salir} />      <Routes>
         <Route path="/" element={login} />
         <Route path="/login" element={login} />
         <Route path="/mozo" element={soloPara('mozo', <VistaMozo />)} />
