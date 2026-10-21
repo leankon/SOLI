@@ -5,7 +5,7 @@
   justify-content: center;
   border: 1.5px solid var(--mesa-vacia-borde);
   border-radius: 8px;
-  font-size: 18px;
+  font-size: calc(18 * var(--u));
   font-weight: bold;
   font-family: inherit;
   color: var(--texto);
@@ -53,7 +53,7 @@
   position: absolute;
 }
 
-/* la silla en si no se ve: es la cajita de 16x12 que ordena las dos partes */
+/* la silla en si no se ve: es la cajita que ordena las dos partes */
 .silla {
   position: absolute;
   /* las sillas no se tocan: los clicks son de la mesa */
@@ -64,18 +64,18 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 16px;
-  height: 4px;
+  width: 100%;
+  height: 33%;
   border-radius: 2px;
   background: var(--silla-respaldo);
 }
 
 .silla .asiento {
   position: absolute;
-  left: 2px;
-  top: 5px;
-  width: 13px;
-  height: 7px;
+  left: 10%;
+  top: 42%;
+  width: 80%;
+  height: 58%;
   border-radius: 2px;
   background: var(--silla-asiento);
-} 
+}

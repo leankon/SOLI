@@ -1,6 +1,9 @@
 import type { Mesa as DatosMesa } from '../data/tipos'
 import './mesa.css'
-
+// pasa unidades del plano a medida de pantalla. --u esta en global.css
+function u(n: number) {
+  return 'calc(' + n + ' * var(--u))'
+}
 const ANCHO_SILLA = 16
 const ALTO_SILLA = 12
 // aire entre el borde de la mesa y la silla
@@ -82,10 +85,10 @@ export default function Mesa({ mesa, onClick, seleccionada, onMouseDown }: Props
     <div
       className="mesa-lugar"
       style={{
-        left: mesa.x - MARGEN_SILLAS,
-        top: mesa.y - MARGEN_SILLAS,
-        width: mesa.tamano + MARGEN_SILLAS * 2,
-        height: mesa.tamano + MARGEN_SILLAS * 2,
+        left: u(mesa.x - MARGEN_SILLAS),
+        top: u(mesa.y - MARGEN_SILLAS),
+        width: u(mesa.tamano + MARGEN_SILLAS * 2),
+        height: u(mesa.tamano + MARGEN_SILLAS * 2),
       }}
     >
       {sillas.map((s, i) => (
@@ -93,10 +96,10 @@ export default function Mesa({ mesa, onClick, seleccionada, onMouseDown }: Props
           key={i}
           className="silla"
           style={{
-            left: s.x,
-            top: s.y,
-            width: ANCHO_SILLA,
-            height: ALTO_SILLA,
+            left: u(s.x),
+            top: u(s.y),
+            width: u(ANCHO_SILLA),
+            height: u(ALTO_SILLA),
             transform: 'translate(-50%, -50%) rotate(' + s.grados + 'deg)',
           }}
         >
@@ -115,10 +118,10 @@ export default function Mesa({ mesa, onClick, seleccionada, onMouseDown }: Props
           (seleccionada ? ' mesa-seleccionada' : '')
         }
         style={{
-          left: MARGEN_SILLAS,
-          top: MARGEN_SILLAS,
-          width: mesa.tamano,
-          height: mesa.tamano,
+          left: u(MARGEN_SILLAS),
+          top: u(MARGEN_SILLAS),
+          width: u(mesa.tamano),
+          height: u(mesa.tamano),
         }}
       >
         {mesa.numero}

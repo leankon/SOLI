@@ -26,6 +26,10 @@
     --gris: var(--mesa-vacia);
     --verde: var(--ocupada);
     --rojo: var(--llamando);
+  
+    /* una unidad del plano. el plano mide 1300 unidades de ancho y ocupa
+       76vw, asi que se ve igual en el editor y en el mozo y llena la pantalla */
+    --u: calc(76vw / 1300);
   }
   
   /* modo oscuro: los mismos nombres con otros colores. el boton de la
@@ -57,7 +61,7 @@
   
   body {
     margin: 0;
-    padding: 20px;
+    padding: 1.5vw;
     background: var(--fondo-pantalla);
     color: var(--texto);
     font-family: Arial, Helvetica, sans-serif;
@@ -77,12 +81,12 @@
   
   /* la barra de arriba: SOLI a la izquierda, los links al medio y la sesion
      a la derecha. los margenes negativos la estiran de borde a borde,
-     porque el body tiene 20px de padding */
+     porque el body tiene 1.5vw de padding */
   nav {
     display: flex;
     align-items: center;
     gap: 16px;
-    margin: -20px -20px 20px -20px;
+    margin: -1.5vw -1.5vw 1.5vw -1.5vw;
     padding: 12px 24px;
     background: var(--superficie);
     border-bottom: 1px solid var(--borde);
@@ -132,24 +136,25 @@
     text-decoration: none;
   }
   
-    /* el boton de la luna y el sol: el icono toma el color del acento */
-    .boton-tema {
-      display: flex;
-      padding: 0.4rem;
-      color: var(--acento);
-    }
+  /* el boton de la luna y el sol: el icono toma el color del acento */
+  .boton-tema {
+    display: flex;
+    padding: 0.4rem;
+    color: var(--acento);
+  }
   
-    .boton-tema svg {
-      width: 1.25rem;
-      height: 1.25rem;
-    }
+  .boton-tema svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  
   /* el plano es la caja donde van las mesas.
      position relative para que el left/top de cada mesa sea desde aca
      y no desde la esquina de la pantalla */
   .plano {
     position: relative;
-    width: 1000px;
-    height: 520px;
+    width: calc(1300 * var(--u));
+    height: calc(520 * var(--u));
     border: 1px solid var(--borde);
     border-radius: 14px;
     background: var(--superficie);
@@ -162,11 +167,11 @@
   .editor {
     display: flex;
     align-items: flex-start;
-    gap: 24px;
+    gap: 1.5vw;
   }
   
   .editor-panel {
-    width: 300px;
+    width: 17vw;
     flex-shrink: 0;
     background: var(--superficie);
     border: 1px solid var(--borde);
@@ -178,14 +183,14 @@
   .mozo {
     display: flex;
     align-items: flex-start;
-    gap: 24px;
+    gap: 1.5vw;
   }
   
   .panel-llamados {
-    width: 260px;
+    width: 17vw;
     flex-shrink: 0;
     /* la misma altura que el plano para que la fila cierre pareja */
-    height: 520px;
+    height: calc(520 * var(--u));
     background: var(--superficie);
     border: 1px solid var(--borde);
     border-radius: 14px;
