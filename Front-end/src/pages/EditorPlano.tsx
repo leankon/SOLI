@@ -1,13 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type { Mesa as DatosMesa } from '../data/tipos'
-import { API, tamano_MESA } from '../data/constantes'
+import { API, tamano_MESA, ANCHO_PLANO, ALTO_PLANO } from '../data/constantes'
 import { useSesion } from '../context/SesionContext'
 import Mesa from '../components/mesa'
-
-// el mismo tamano que tiene .plano en el css
-const ANCHO_PLANO = 1000
-const ALTO_PLANO = 520
-
 // sacados de la escala del figma (de 48 a 123). la mediana es la de siempre,
 // la que usan las mesas nuevas
 const TAMANOS = [
@@ -40,7 +35,7 @@ export default function EditorPlano() {
   const [idElegida, setIdElegida] = useState<number | null>(null)
   const [idArrastrada, setIdArrastrada] = useState<number | null>(null)
   const [agarre, setAgarre] = useState({ x: 0, y: 0 })
-
+  const plano = useRef<HTMLDivElement>(null)
   const elegida = listaMesas.find((m) => m.id === idElegida)
 
   // una mesa cambio si alguno de sus datos no es igual al de la base
@@ -154,14 +149,21 @@ export default function EditorPlano() {
   function cambiarMesa(id: number, cambios: Partial<DatosMesa>) {
     setListaMesas(listaMesas.map((m) => (m.id === id ? { ...m, ...cambios } : m)))
   }
+  // el mouse viene en pixeles de pantalla y las mesas en unidades del plano
+  function aUnidades(e: React.MouseEvent) {
+    if (plano.current === null) return { x: 0, y: 0 }
+    const caja = plano.current.getBoundingClientRect()
+    const unidad = caja.width / ANCHO_PLANO
+    return { x: (e.clientX - caja.left) / unidad, y: (e.clientY - caja.top) / unidad }
+  }
 
   function agarrar(e: React.MouseEvent, mesa: DatosMesa) {
     // sin esto el navegador cree que quiero seleccionar el numero de la mesa
     e.preventDefault()
     setIdArrastrada(mesa.id)
     // de que punto de la mesa la agarre. sin esto la mesa salta al cursor
-    setAgarre({ x: e.clientX - mesa.x, y: e.clientY - mesa.y })
-  }
+    const mouse = aUnidades(e)
+    setAgarre({ x: mouse.x - mesa.x, y: mouse.y - mesa.y })  }
 
   function mover(e: React.MouseEvent) {
     if (idArrastrada === null) return
@@ -170,8 +172,10 @@ export default function EditorPlano() {
     if (mesa === undefined) return
 
     // la mesa no se puede salir del plano: minimo 0, maximo el borde menos su tamano
-    const x = Math.min(Math.max(e.clientX - agarre.x, 0), ANCHO_PLANO - mesa.tamano)
-    const y = Math.min(Math.max(e.clientY - agarre.y, 0), ALTO_PLANO - mesa.tamano)
+    // redondeo porque en la base x e y son numeros enteros
+    const mouse = aUnidades(e)
+    const x = Math.round(Math.min(Math.max(mouse.x - agarre.x, 0), ANCHO_PLANO - mesa.tamano))
+    const y = Math.round(Math.min(Math.max(mouse.y - agarre.y, 0), ALTO_PLANO - mesa.tamano))
 
     setListaMesas(listaMesas.map((m) => (m.id === idArrastrada ? { ...m, x, y } : m)))
   }
@@ -213,7 +217,7 @@ export default function EditorPlano() {
       <div className="editor">
         <div
           className="plano"
-          onMouseMove={mover}
+          ref={plano}          onMouseMove={mover}
           onMouseUp={soltar}
           onMouseLeave={soltar}
         >
