@@ -8,52 +8,53 @@
 }
 
 /* sin padding: las franjas de llamado van de borde a borde, asi que el
-   aire lo pone el cuerpo. overflow para que el fondo rosa no se salga
-   de las esquinas redondeadas */
+   aire lo pone el cuerpo. overflow para que el fondo de las franjas no se
+   salga de las esquinas redondeadas */
 .popup {
-  background: var(--fondo);
+  background: var(--superficie);
   border: 1px solid var(--borde);
-  border-radius: 8px;
-  width: 420px;
+  border-radius: 14px;
+  width: 30vw;
   overflow: hidden;
 }
 
 .popup-cuerpo {
-  padding: 24px;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1rem;
 }
 
 /* los llamados pendientes de la mesa, apilados arriba de todo */
 .franja-llamado,
 .franja-mas {
-  background: #fbecec;
+  background: var(--llamando-suave);
 }
 
 .franja-llamado {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px 24px;
-  border-bottom: 1px solid #f2d7d7;
+  gap: 0.6rem;
+  padding: 0.9rem 1.5rem;
+  border-bottom: 1px solid var(--borde);
   font-size: 15px;
 }
 
 .franja-llamado .motivo {
   font-weight: bold;
+  color: var(--llamando);
 }
 
 /* el "hace X min" se va solo a la derecha */
 .franja-llamado .espera {
   margin-left: auto;
   font-size: 14px;
-  color: #737373;
+  color: var(--texto-secundario);
 }
 
 .chapa-prioridad {
-  background: var(--rojo);
-  color: #ffffff;
+  background: var(--llamando);
+  color: var(--texto-sobre-color);
   font-size: 12px;
   padding: 3px 9px;
   border-radius: 999px;
@@ -61,20 +62,21 @@
 
 /* el renglon corto del final cuando hay mas de tres llamados */
 .franja-mas {
-  padding: 8px 24px;
+  padding: 0.5rem 1.5rem;
   font-size: 14px;
-  color: #737373;
+  color: var(--texto-secundario);
 }
 
 .popup-header {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 0.75rem;
 }
 
 .popup-header h2 {
   margin: 0;
   font-size: 22px;
+  color: var(--texto);
 }
 
 /* el ✕ se va solo a la derecha */
@@ -83,41 +85,55 @@
   background: none;
   border: none;
   font-size: 18px;
-  color: #737373;
+  color: var(--texto-secundario);
   padding: 0;
 }
 
+/* el estado de la mesa, del mismo color que la mesa en el plano */
 .chip {
   font-size: 13px;
   padding: 4px 10px;
   border-radius: 999px;
 }
-.chip-vacia    { background: var(--gris); }
-.chip-ocupada  { background: var(--verde); }
-.chip-llamando { background: var(--rojo); }
+
+.chip-vacia {
+  background: var(--mesa-vacia);
+  color: var(--texto);
+}
+
+.chip-ocupada {
+  background: var(--ocupada);
+  color: var(--texto-sobre-color);
+}
+
+.chip-llamando {
+  background: var(--llamando);
+  color: var(--texto-sobre-color);
+}
 
 .ayuda {
   margin: 0;
   font-size: 14px;
-  color: #737373;
+  color: var(--texto-secundario);
 }
 
 .boton-principal,
 .boton-peligro {
-  padding: 14px;
-  border-radius: 4px;
+  padding: 0.9rem;
+  border-radius: 8px;
   font-size: 16px;
 }
 
+/* el boton fuerte va con el color de acento, como los links activos */
 .boton-principal {
-  background: var(--texto);
-  color: #ffffff;
+  background: var(--acento);
+  color: var(--texto-sobre-acento);
   border: none;
   font-weight: bold;
 }
 
 .boton-peligro {
-  background: var(--fondo);
-  color: var(--rojo);
-  border: 1px solid var(--rojo);
+  background: var(--superficie);
+  color: var(--llamando);
+  border: 1px solid var(--llamando);
 }
