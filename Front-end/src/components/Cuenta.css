@@ -1,7 +1,7 @@
 /* la cuenta necesita mas lugar que un pop up comun: adentro entran la
    comanda, el total y el catalogo entero */
    .popup-ancho {
-    width: 620px;
+    width: 44vw;
   }
   
   /* si el catalogo es largo, scrollea la cuenta y no la pagina de atras.
@@ -16,7 +16,7 @@
   .popup-cuerpo h3 {
     margin: 0;
     font-size: 16px;
-    color: #737373;
+    color: var(--texto-secundario);
   }
   
   /* cada linea de la cuenta y cada plato del menu es una fila:
@@ -24,9 +24,10 @@
   .linea {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 0;
+    gap: 0.6rem;
+    padding: 0.6rem 0;
     border-bottom: 1px solid var(--borde);
+    color: var(--texto);
   }
   
   .linea .nombre {
@@ -44,25 +45,36 @@
     flex-shrink: 0;
     padding: 4px 10px;
     border: 1px solid var(--borde);
-    border-radius: 4px;
-    background: var(--fondo);
+    border-radius: 8px;
+    background: var(--superficie-suave);
+    color: var(--acento);
+    font-weight: bold;
   }
   
   .total {
     display: flex;
     justify-content: space-between;
-    padding-top: 14px;
+    padding-top: 0.9rem;
     font-size: 18px;
     font-weight: 600;
     font-variant-numeric: tabular-nums;
+    color: var(--texto);
   }
   
   .buscador {
     width: 100%;
-    padding: 10px;
+    padding: 0.6rem;
     border: 1px solid var(--borde);
-    border-radius: 4px;
+    border-radius: 8px;
+    background: var(--superficie);
+    color: var(--texto);
     font-family: inherit;
     font-size: 16px;
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* el borde de acento muestra donde esta escribiendo */
+  .buscador:focus {
+    outline: none;
+    border-color: var(--acento);
   }
