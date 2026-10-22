@@ -14,40 +14,40 @@
 
 
   // Mesas
-  router.get("/mesas", mesas.getMesas);
-  router.get("/mesas/:id", mesas.getMesa);
-  router.post("/mesas", mesas.createMesa);
-  router.put("/mesas/:id", mesas.updateMesa);
-  router.delete("/mesas/:id", mesas.deleteMesa);
+  router.get("/mesas", verificarToken, mesas.getMesas);
+  router.get("/mesas/:id",  verificarToken, mesas.getMesa);
+  router.post("/mesas", verificarToken, mesas.createMesa);
+  router.put("/mesas/:id",  verificarToken,mesas.updateMesa);
+  router.delete("/mesas/:id",verificarToken, mesas.deleteMesa);
 
   // Usuarios
-  router.get("/usuarios", usuarios.getUsuarios);
-  router.get("/usuarios/:id", usuarios.getUsuario);
-  router.post("/usuarios", usuarios.createUsuario);
-  router.put("/usuarios/:id", usuarios.updateUsuario);
-  router.delete("/usuarios/:id", usuarios.deleteUsuario);
+  router.get("/usuarios", verificarToken,usuarios.getUsuarios);
+  router.get("/usuarios/:id", verificarToken,usuarios.getUsuario);
+  router.post("/usuarios", verificarToken, usuarios.createUsuario);
+  router.put("/usuarios/:id", verificarToken,usuarios.updateUsuario);
+  router.delete("/usuarios/:id", verificarToken,usuarios.deleteUsuario);
 
   router.post("/login", usuarios.login);
   
 
   // Platos
-  router.get("/platos", platos.getPlatos);
-  router.get("/platos/:id", platos.getPlato);
-  router.post("/platos", platos.createPlato);
-  router.put("/platos/:id", platos.updatePlato);
-  router.delete("/platos/:id", platos.deletePlato);
+  router.get("/platos", verificarToken,platos.getPlatos);
+  router.get("/platos/:id",verificarToken, platos.getPlato);
+  router.post("/platos", verificarToken,platos.createPlato);
+  router.put("/platos/:id", verificarToken,platos.updatePlato);
+  router.delete("/platos/:id", verificarToken,platos.deletePlato);
 
   // Solicitudes
-  router.get("/solicitudes", solicitudes.getSolicitudes);
-  router.get("/solicitudes/:id", solicitudes.getSolicitud);
+  router.get("/solicitudes", verificarToken,solicitudes.getSolicitudes);
+  router.get("/solicitudes/:id", verificarToken,solicitudes.getSolicitud);
   router.post("/solicitudes", solicitudes.createSolicitud);
-  router.put("/solicitudes/:id", solicitudes.updateSolicitud);
-  router.delete("/solicitudes/:id", solicitudes.deleteSolicitud);
+  router.put("/solicitudes/:id", verificarToken,solicitudes.updateSolicitud);
+  router.delete("/solicitudes/:id",verificarToken, solicitudes.deleteSolicitud);
 
   // Pide (pedidos)
-  router.get("/pide", pedidos.getPide);
-  router.get("/mesas/:id/pedido", pedidos.getPideByMesa);
-  router.post("/pide", pedidos.createPide);
-  router.delete("/pide/:id", pedidos.deletePide);
+  router.get("/pide", verificarToken,pedidos.getPide);
+  router.get("/mesas/:id/pedido", verificarToken,pedidos.getPideByMesa);
+  router.post("/pide", verificarToken,pedidos.createPide);
+  router.delete("/pide/:id", verificarToken,pedidos.deletePide);
 
   export default router;
