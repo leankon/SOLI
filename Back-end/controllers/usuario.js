@@ -94,7 +94,7 @@ try{
   "SELECT id FROM usuario WHERE nombre_usuario = $1 AND rol = 'encargado' ORDER BY id LIMIT 1",
   [email]
 );
-const cuenta = resCuenta.rows[0].id;
+const cuenta = resCuenta.rows.length > 0 ? resCuenta.rows[0].id : usuario.id;
 
  
   const payload= {id: usuario.id, rol:usuario.rol, cuenta: cuenta};
