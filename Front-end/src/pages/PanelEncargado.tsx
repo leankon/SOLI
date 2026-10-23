@@ -14,6 +14,12 @@ export default function PanelEncargado() {
   const [listaMesas, setListaMesas] = useState<Mesa[]>([])
   const [cargando, setCargando] = useState(true)
 
+  // en modo claro esta pantalla va con la paleta arena del figma.
+  // al irme a otra pantalla se la saco
+  useEffect(() => {
+    document.body.classList.add('arena')
+    return () => document.body.classList.remove('arena')
+  }, [])
   useEffect(() => {
     function traer() {
       // pido las dos cosas de una. necesito las mesas porque la solicitud
@@ -83,23 +89,32 @@ export default function PanelEncargado() {
   }
 
   return (
-    <div>
-      <h1>Llamados ({pendientes.length})</h1>
+    <div className="panel-encargado">
+      <div className="titulo-llamados">
+        <h1>Llamados</h1>
+        {pendientes.length > 0 && (
+          <span className="cantidad">{pendientes.length} pendientes</span>
+        )}
+      </div>
+      <p className="subtitulo">
+        Arriba el que hace mas rato que espera. Con ✓ el llamado se apaga para todos.
+      </p>
 
-      {pendientes.length === 0 ? (
-        <p>No hay llamados. Todo tranquilo.</p>
-      ) : (
-        <div>
-          {pendientes.map((solicitud) => (
+      <div className="lista-llamados">
+        {pendientes.length === 0 ? (
+          <p className="sin-llamados">No hay llamados. Todo tranquilo.</p>
+        ) : (
+          pendientes.map((solicitud, i) => (
             <Llamado
               key={solicitud.id}
               solicitud={solicitud}
               numeroMesa={numeroDeMesa(solicitud.id_mesa)}
               onAtender={atender}
+              prioridad={i === 0}
             />
-          ))}
-        </div>
-      )}
+          ))
+        )}
+      </div>
     </div>
   )
 }

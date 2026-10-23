@@ -33,7 +33,6 @@ export function esperaDe(solicitud: Solicitud) {
   const cuando = momentoDelLlamado(solicitud.fecha, solicitud.hora)
   return textoDeEspera(Math.floor((Date.now() - cuando.getTime()) / 60000))
 }
-
 type Props = {
   solicitud: Solicitud
   // el numero lo busca la pagina, que es la que tiene las mesas
@@ -41,23 +40,26 @@ type Props = {
   // el llamado no se borra solo: avisa "me atendieron" y manda su id.
   // va con ? porque en la vista del mozo no hay boton para apagarlo
   onAtender?: (id: number) => void
+  // el que hace mas rato que espera lleva la chapa
+  prioridad?: boolean
 }
 
-export default function Llamado({ solicitud, numeroMesa, onAtender }: Props) {
+export default function Llamado({ solicitud, numeroMesa, onAtender, prioridad }: Props) {
   return (
-    <p>
-      <strong>Mesa {numeroMesa}</strong> —{' '}
+    <div className="llamado">
+      <strong>Mesa {numeroMesa}</strong>
       {/* si la base manda un tipo que no conozco, lo muestro tal cual
           en vez de dejar el renglon a medias */}
-      {TEXTO_MOTIVO[solicitud.tipo] || solicitud.tipo} — {esperaDe(solicitud)}
+      <span className="motivo">{TEXTO_MOTIVO[solicitud.tipo] || solicitud.tipo}</span>
+      {prioridad && <span className="chapa-prioridad">Prioridad</span>}
+      <span className="espera">{esperaDe(solicitud)}</span>
       {onAtender && (
-        <>
-          {' '}
-          <button type="button" onClick={() => onAtender(solicitud.id)}>
-            ✓
-          </button>
-        </>
+        <button type="button" className="boton-atender" onClick={() => onAtender(solicitud.id)}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 12l5 5 9-9" />
+          </svg>
+        </button>
       )}
-    </p>
+    </div>
   )
 }

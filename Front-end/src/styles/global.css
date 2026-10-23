@@ -329,3 +329,107 @@
   font-size: 14px;
   color: var(--texto-ayuda);
 }
+
+/* el panel del encargado en modo claro va con la paleta arena y petroleo,
+   la que se eligio en el figma. en oscuro queda la de siempre */
+   :root:not([data-theme="oscuro"]) body.arena {
+    --fondo-pantalla: #f6f3ed;
+    --superficie: #fffdf9;
+    --superficie-suave: #eee8dd;
+    --borde: #e0d8c9;
+    --texto: #23292a;
+    --texto-secundario: #6b6557;
+    --texto-ayuda: #2b6168;
+    --acento: #22585f;
+    --acento-suave: #e1ecec;
+    --ocupada: #0f8a5f;
+    --llamando: #cf3a2f;
+    --llamando-suave: #fbeeec;
+  }
+  
+  /* la lista va en una columna al medio, como en el figma */
+  .panel-encargado {
+    width: 50vw;
+    margin: 0 auto;
+  }
+  
+  .titulo-llamados {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .titulo-llamados h1 {
+    margin: 0;
+    font-size: 32px;
+  }
+  
+  .cantidad {
+    background: var(--llamando);
+    color: var(--texto-sobre-color);
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  .subtitulo {
+    margin: 0.75rem 0 1.25rem 0;
+    font-size: 14px;
+    color: var(--texto-ayuda);
+  }
+  
+  .lista-llamados {
+    background: var(--superficie);
+    border: 1px solid var(--borde);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  
+  .sin-llamados {
+    margin: 0;
+    padding: 1.25rem;
+    color: var(--texto-secundario);
+  }
+  
+  /* un renglon por llamado. lo usan el panel y la columna del mozo */
+  .llamado {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--borde);
+  }
+  
+  .llamado:last-child {
+    border-bottom: none;
+  }
+  
+  .llamado strong {
+    font-size: 18px;
+  }
+  
+  .llamado .motivo {
+    color: var(--texto-secundario);
+  }
+  
+  /* el "hace X min" y el ✓ se van a la derecha */
+  .llamado .espera {
+    margin-left: auto;
+    font-size: 14px;
+    color: var(--texto-secundario);
+  }
+  
+  .boton-atender {
+    display: flex;
+    padding: 0.6rem;
+    border: none;
+    border-radius: 8px;
+    background: var(--ocupada);
+    color: var(--texto-sobre-color);
+  }
+  
+  .boton-atender svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
