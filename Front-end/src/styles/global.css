@@ -433,3 +433,209 @@
     width: 1.25rem;
     height: 1.25rem;
   }
+  
+/* catalogo y crear rol: la tabla a la izquierda y el formulario al costado */
+.catalogo {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5vw;
+}
+
+.tabla {
+  flex: 1;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+/* cada fila son tres columnas: el nombre ocupa lo que sobra, el precio
+   y los botones tienen un ancho fijo asi quedan alineados */
+.fila {
+  display: grid;
+  grid-template-columns: 1fr 9rem 12rem;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid var(--borde);
+}
+
+.fila:last-child {
+  border-bottom: none;
+}
+
+.fila-titulos {
+  background: var(--superficie-suave);
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--texto-secundario);
+}
+
+.fila-editando {
+  background: var(--acento-suave);
+}
+
+.fila .precio {
+  font-variant-numeric: tabular-nums;
+}
+
+.acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.4rem;
+}
+
+.tabla-aviso {
+  margin: 0;
+  padding: 1.25rem;
+  color: var(--texto-secundario);
+}
+
+.boton-chico {
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background: var(--superficie);
+  color: var(--acento);
+  font-size: 14px;
+}
+
+.boton-chico-acento {
+  background: var(--acento);
+  border-color: var(--acento);
+  color: var(--texto-sobre-acento);
+}
+
+.boton-chico-peligro {
+  color: var(--llamando);
+}
+
+.panel-costado {
+  width: 22vw;
+  flex-shrink: 0;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 14px;
+  padding: 1.25rem;
+}
+
+.panel-costado h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 20px;
+}
+
+/* los campos de texto de todos los formularios */
+.campo {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background: var(--superficie);
+  color: var(--texto);
+  font-family: inherit;
+  font-size: 15px;
+}
+
+.campo:focus {
+  outline: none;
+  border-color: var(--acento);
+}
+
+.boton-ancho {
+  width: 100%;
+  margin-top: 1.25rem;
+}
+
+/* crear rol: el rol de cada persona como una chapita */
+.chapa-rol {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+}
+
+.chapa-mozo {
+  background: var(--superficie-suave);
+  color: var(--texto);
+}
+
+.chapa-encargado {
+  background: var(--acento-suave);
+  color: var(--acento);
+  font-weight: bold;
+}
+
+.sos-vos {
+  font-size: 14px;
+  color: var(--texto-secundario);
+}
+
+.aviso,
+.error-form {
+  margin: 1rem 0 0 0;
+  font-size: 14px;
+}
+
+.aviso {
+  color: var(--texto-ayuda);
+}
+
+.error-form {
+  color: var(--llamando);
+  font-weight: bold;
+} 
+
+/* el login no tiene barra: la tarjeta va sola en el medio de la pantalla */
+.login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 3vw);
+}
+
+.tarjeta-login {
+  width: min(90vw, 28rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 2.5rem;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 16px;
+}
+
+/* aca las etiquetas van pegadas a su campo, el aire lo pone el gap */
+.tarjeta-login .etiqueta {
+  margin: 0 0 0.4rem 0;
+}
+
+.logo {
+  margin: 0;
+  font-size: 40px;
+  font-weight: bold;
+  color: var(--acento);
+}
+
+.login-bajada {
+  margin: 0.3rem 0 0 0;
+  color: var(--texto-secundario);
+}
+
+.error-login {
+  margin: 0;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  background: var(--llamando-suave);
+  color: var(--llamando);
+  font-size: 14px;
+}
+
+.tarjeta-login .boton-acento {
+  padding: 0.9rem;
+  font-size: 16px;
+}
+
+.login-pie {
+  margin: 0;
+  font-size: 13px;
+  color: var(--texto-ayuda);
+}

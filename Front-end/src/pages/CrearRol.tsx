@@ -107,66 +107,80 @@ export default function CrearRol() {
   return (
     <div>
       <h1>Crear rol</h1>
-      <p>Todos entran con el email {miEmail}. Lo que cambia es la contrasena.</p>
+      <p className="subtitulo">Todos entran con el email {miEmail}. Lo que cambia es la contrasena.</p>
 
-      <form onSubmit={crear}>
-        <p>
-          Nombre{' '}
-          <input value={nombre} onChange={(e) => setNombre(e.target.value)} />
-        </p>
+      <div className="catalogo">
+        <div className="tabla">
+          <div className="fila fila-titulos">
+            <span>Persona ({lista.length})</span>
+            <span>Rol</span>
+            <span />
+          </div>
 
-        <p>
-          Apellido{' '}
-          <input value={apellido} onChange={(e) => setApellido(e.target.value)} />
-        </p>
+          {cargando ? (
+            <p className="tabla-aviso">Buscando las personas...</p>
+          ) : (
+            lista.map((u) => (
+              <div className="fila" key={u.id}>
+                <span className="nombre">
+                  {u.nombre} {u.apellido}
+                </span>
+                <span>
+                  <span className={'chapa-rol chapa-' + u.rol}>
+                    {u.rol === 'mozo' ? 'Mozo' : 'Encargado'}
+                  </span>
+                </span>
+                <div className="acciones">
+                  {u.id === miId ? (
+                    <span className="sos-vos">Sos vos</span>
+                  ) : (
+                    <button type="button" className="boton-chico boton-chico-peligro" onClick={() => borrar(u.id)}>
+                      Borrar
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
 
-        <p>
-          DNI{' '}
-          <input value={dni} onChange={(e) => setDni(e.target.value)} />
-        </p>
+        <form className="panel-costado" onSubmit={crear}>
+          <h2>Nueva persona</h2>
 
-        <p>
-          Rol{' '}
-          <select value={rol} onChange={(e) => setRol(e.target.value as Rol)}>
-            <option value="mozo">Mozo</option>
-            <option value="encargado">Encargado</option>
-          </select>
-        </p>
+          <p className="etiqueta">Nombre</p>
+          <input className="campo" value={nombre} onChange={(e) => setNombre(e.target.value)} />
 
-        <p>
-          Contrasena{' '}
-          <input value={password} onChange={(e) => setPassword(e.target.value)} />
-        </p>
+          <p className="etiqueta">Apellido</p>
+          <input className="campo" value={apellido} onChange={(e) => setApellido(e.target.value)} />
 
-        {rol === 'encargado' && (
-          <p>Ojo: un encargado puede editar el plano, el catalogo y crear mas usuarios.</p>
-        )}
+          <p className="etiqueta">DNI</p>
+          <input className="campo" value={dni} onChange={(e) => setDni(e.target.value)} />
 
-        {error !== '' && <p>{error}</p>}
+          <p className="etiqueta">Rol</p>
+          <div className="opciones">
+            {/* la que esta elegida queda disabled y el css la pinta */}
+            <button type="button" className="opcion" onClick={() => setRol('mozo')} disabled={rol === 'mozo'}>
+              Mozo
+            </button>
+            <button type="button" className="opcion" onClick={() => setRol('encargado')} disabled={rol === 'encargado'}>
+              Encargado
+            </button>
+          </div>
 
-        <button type="submit">Crear</button>
-      </form>
+          <p className="etiqueta">Contrasena</p>
+          <input className="campo" value={password} onChange={(e) => setPassword(e.target.value)} />
 
-      <h2>Personas cargadas ({lista.length})</h2>
+          {rol === 'encargado' && (
+            <p className="aviso">Ojo: un encargado puede editar el plano, el catalogo y crear mas usuarios.</p>
+          )}
 
-      {cargando ? (
-        <p>Buscando las personas...</p>
-      ) : (
-        <ul>
-          {lista.map((u) => (
-            <li key={u.id}>
-              {u.nombre} {u.apellido} — {u.rol}{' '}
-              {u.id === miId ? (
-                <span>(sos vos)</span>
-              ) : (
-                <button type="button" onClick={() => borrar(u.id)}>
-                  Borrar
-                </button>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
+          {error !== '' && <p className="error-form">{error}</p>}
+
+          <button type="submit" className="boton-acento boton-ancho">
+            Crear
+          </button>
+        </form>
+      </div>
     </div>
   )
 }
