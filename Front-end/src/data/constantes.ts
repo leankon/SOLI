@@ -2,6 +2,6 @@
 export const tamano_MESA = 80
 // el plano mide siempre esto en unidades. en pantalla una unidad es --u del css
 export const ANCHO_PLANO = 1300
-export const ALTO_PLANO = 520
+export const ALTO_PLANO = 700
 export const EMAIL_RESTAURANTE = '1@gmail.com'
 export const API = 'https://soli-olive.vercel.app'

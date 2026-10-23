@@ -3,12 +3,16 @@ import type { Mesa as DatosMesa } from '../data/tipos'
 import { API, tamano_MESA, ANCHO_PLANO, ALTO_PLANO } from '../data/constantes'
 import { useSesion } from '../context/SesionContext'
 import Mesa from '../components/mesa'
+
+// la de 8 lugares solo entra en la grande
+const TAMANO_GRANDE = 108
+
 // sacados de la escala del figma (de 48 a 123). la mediana es la de siempre,
 // la que usan las mesas nuevas
 const TAMANOS = [
   { nombre: 'Chica', px: 63 },
   { nombre: 'Mediana', px: tamano_MESA },
-  { nombre: 'Grande', px: 108 },
+  { nombre: 'Grande', px: TAMANO_GRANDE },
 ]
 
 const FORMAS = [
@@ -16,12 +20,13 @@ const FORMAS = [
   { nombre: 'Redonda', valor: 'circular' },
 ] as const
 
-// los mismos que use en el figma: de a dos, de a cuatro y de a seis
-const LUGARES = [2, 4, 6]
+// de a dos, de a cuatro, de a seis y de a ocho
+const LUGARES = [2, 4, 6, 8]
 
 // cuanto se corre cada mesa nueva para no taparse con la anterior:
 // la mesa, las sillas de los dos lados y un poco de aire
 const PASO = tamano_MESA + 40
+
 export default function EditorPlano() {
   // quien esta adentro y los headers con su token
   const { usuario, cabeceras } = useSesion()
@@ -32,10 +37,13 @@ export default function EditorPlano() {
   const [guardadas, setGuardadas] = useState<DatosMesa[]>([])
   const [cargando, setCargando] = useState(true)
   const [guardando, setGuardando] = useState(false)
+  // mientras la base devuelve la mesa nueva, los botones de agregar se apagan
+  const [creando, setCreando] = useState(false)
   const [idElegida, setIdElegida] = useState<number | null>(null)
   const [idArrastrada, setIdArrastrada] = useState<number | null>(null)
   const [agarre, setAgarre] = useState({ x: 0, y: 0 })
   const plano = useRef<HTMLDivElement>(null)
+
   const elegida = listaMesas.find((m) => m.id === idElegida)
 
   // una mesa cambio si alguno de sus datos no es igual al de la base
@@ -46,7 +54,7 @@ export default function EditorPlano() {
 
   useEffect(() => {
     fetch(API + '/mesas', { headers: cabeceras() })
-          .then((r) => r.json())
+      .then((r) => r.json())
       .then((datos) => {
         setListaMesas(datos)
         setGuardadas(datos)
@@ -102,6 +110,8 @@ export default function EditorPlano() {
       id_usuario: idUsuario,
     }
 
+    setCreando(true)
+
     try {
       const response = await fetch(API + '/mesas', {
         method: 'POST',
@@ -122,6 +132,8 @@ export default function EditorPlano() {
       console.error('Hubo un error:', error)
       alert('No se pudo crear la mesa. Fijate la conexion.')
     }
+
+    setCreando(false)
   }
 
   const borrar = async (id: number) => {
@@ -149,6 +161,7 @@ export default function EditorPlano() {
   function cambiarMesa(id: number, cambios: Partial<DatosMesa>) {
     setListaMesas(listaMesas.map((m) => (m.id === id ? { ...m, ...cambios } : m)))
   }
+
   // el mouse viene en pixeles de pantalla y las mesas en unidades del plano
   function aUnidades(e: React.MouseEvent) {
     if (plano.current === null) return { x: 0, y: 0 }
@@ -163,7 +176,8 @@ export default function EditorPlano() {
     setIdArrastrada(mesa.id)
     // de que punto de la mesa la agarre. sin esto la mesa salta al cursor
     const mouse = aUnidades(e)
-    setAgarre({ x: mouse.x - mesa.x, y: mouse.y - mesa.y })  }
+    setAgarre({ x: mouse.x - mesa.x, y: mouse.y - mesa.y })
+  }
 
   function mover(e: React.MouseEvent) {
     if (idArrastrada === null) return
@@ -171,7 +185,7 @@ export default function EditorPlano() {
     const mesa = listaMesas.find((m) => m.id === idArrastrada)
     if (mesa === undefined) return
 
-    // la mesa no se puede salir del plano: minimo 0, maximo el borde menos su tamano
+    // la mesa no se puede salir del plano: minimo 0, maximo el borde menos su tamano.
     // redondeo porque en la base x e y son numeros enteros
     const mouse = aUnidades(e)
     const x = Math.round(Math.min(Math.max(mouse.x - agarre.x, 0), ANCHO_PLANO - mesa.tamano))
@@ -195,29 +209,45 @@ export default function EditorPlano() {
 
   return (
     <div>
-      <h1>Editor de plano</h1>
-      <p>Arrastra una mesa para moverla. Tocala para ver sus datos.</p>
+      <div className="editor-cabecera">
+        <div>
+          <h1>Editor de plano</h1>
+          <p className="subtitulo">Arrastra una mesa para moverla. Tocala para ver sus datos.</p>
+        </div>
 
-      <p>
-        <button type="button" onClick={() => agregar('cuadrado')}>
-          + Mesa cuadrada
-        </button>{' '}
-        <button type="button" onClick={() => agregar('circular')}>
-          + Mesa redonda
-        </button>{' '}
-        <button
-          type="button"
-          onClick={guardar}
-          disabled={cambiadas.length === 0 || guardando}
-        >
-          {guardando ? 'Guardando...' : 'Guardar plano'}
-        </button>
-      </p>
+        <div className="editor-botones">
+          <button
+            type="button"
+            className="boton-suave"
+            onClick={() => agregar('cuadrado')}
+            disabled={creando}
+          >
+            {creando ? 'Creando...' : '+ Mesa cuadrada'}
+          </button>
+          <button
+            type="button"
+            className="boton-suave"
+            onClick={() => agregar('circular')}
+            disabled={creando}
+          >
+            {creando ? 'Creando...' : '+ Mesa redonda'}
+          </button>
+          <button
+            type="button"
+            className="boton-acento"
+            onClick={guardar}
+            disabled={cambiadas.length === 0 || guardando}
+          >
+            {guardando ? 'Guardando...' : 'Guardar plano'}
+          </button>
+        </div>
+      </div>
 
       <div className="editor">
         <div
           className="plano"
-          ref={plano}          onMouseMove={mover}
+          ref={plano}
+          onMouseMove={mover}
           onMouseUp={soltar}
           onMouseLeave={soltar}
         >
@@ -243,40 +273,49 @@ export default function EditorPlano() {
             <div>
               <h2>Mesa {elegida.numero}</h2>
 
-              <p>Forma</p>
-              <p>
+              <p className="etiqueta">Forma</p>
+              <div className="opciones">
                 {FORMAS.map((f) => (
                   <button
                     key={f.valor}
                     type="button"
+                    className="opcion"
                     onClick={() => cambiarMesa(elegida.id, { forma: f.valor })}
                     disabled={elegida.forma === f.valor}
                   >
                     {f.nombre}
                   </button>
                 ))}
-              </p>
+              </div>
 
-              <p>Tamano</p>
-              <p>
+              <p className="etiqueta">Tamano</p>
+              <div className="opciones">
                 {TAMANOS.map((t) => (
                   <button
                     key={t.px}
                     type="button"
-                    onClick={() => cambiarMesa(elegida.id, { tamano: t.px })}
+                    className="opcion"
+                    onClick={() =>
+                      cambiarMesa(elegida.id, {
+                        tamano: t.px,
+                        // si achican una mesa de 8 le dejo 6, si no las sillas se pisan
+                        lugares: t.px !== TAMANO_GRANDE && elegida.lugares === 8 ? 6 : elegida.lugares,
+                      })
+                    }
                     disabled={elegida.tamano === t.px}
                   >
-                    {t.nombre} ({t.px})
+                    {t.nombre}
                   </button>
                 ))}
-              </p>
+              </div>
 
-              <p>Lugares</p>
-              <p>
-                {LUGARES.map((n) => (
+              <p className="etiqueta">Lugares</p>
+              <div className="opciones">
+                {LUGARES.filter((n) => n < 8 || elegida.tamano === TAMANO_GRANDE).map((n) => (
                   <button
                     key={n}
                     type="button"
+                    className="opcion"
                     onClick={() => cambiarMesa(elegida.id, { lugares: n })}
                     // las que vienen sin lugares se dibujan con 4 sillas
                     disabled={(elegida.lugares || 4) === n}
@@ -284,14 +323,14 @@ export default function EditorPlano() {
                     {n}
                   </button>
                 ))}
-              </p>
+              </div>
 
-              <button type="button" onClick={() => borrar(elegida.id)}>
+              <button type="button" className="boton-borrar" onClick={() => borrar(elegida.id)}>
                 Borrar mesa
               </button>
             </div>
           ) : (
-            <p>Ninguna mesa elegida.</p>
+            <p className="sin-elegir">Toca una mesa del plano para cambiarle la forma, el tamano o los lugares.</p>
           )}
         </div>
       </div>

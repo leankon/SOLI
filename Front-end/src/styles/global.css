@@ -29,8 +29,9 @@
   
     /* una unidad del plano. el plano mide 1300 unidades de ancho y ocupa
        76vw, asi que se ve igual en el editor y en el mozo y llena la pantalla */
-    --u: calc(76vw / 1300);
-  }
+    /* la mas chica entre "entra a lo ancho" y "entra a lo alto", asi el
+       plano nunca se pasa de la pantalla. 13rem es la barra y el titulo */
+       --u: min(calc(76vw / 1300), calc((100vh - 13rem) / 700));  }
   
   /* modo oscuro: los mismos nombres con otros colores. el boton de la
      luna le pone data-theme="oscuro" al html y todo cambia solo */
@@ -154,7 +155,7 @@
   .plano {
     position: relative;
     width: calc(1300 * var(--u));
-    height: calc(520 * var(--u));
+        height: calc(700 * var(--u));
     border: 1px solid var(--borde);
     border-radius: 14px;
     background: var(--superficie);
@@ -173,6 +174,9 @@
   .editor-panel {
     width: 17vw;
     flex-shrink: 0;
+ /* a lo largo de todo el plano, como la columna de llamados del mozo */
+    height: calc(700 * var(--u));
+    overflow-y: auto;
     background: var(--superficie);
     border: 1px solid var(--borde);
     border-radius: 14px;
@@ -190,7 +194,7 @@
     width: 17vw;
     flex-shrink: 0;
     /* la misma altura que el plano para que la fila cierre pareja */
-    height: calc(520 * var(--u));
+        height: calc(700 * var(--u));
     background: var(--superficie);
     border: 1px solid var(--borde);
     border-radius: 14px;
@@ -221,3 +225,211 @@
   .pastilla-ocupada  { background: var(--ocupada);  color: var(--texto-sobre-color); }
   .pastilla-llamando { background: var(--llamando); color: var(--texto-sobre-color); }
   .pastilla-vacia    { background: var(--mesa-vacia); color: var(--texto); }
+  
+/* arriba del editor: el titulo a la izquierda y los botones a la derecha */
+.editor-cabecera {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.editor-cabecera h1 {
+  margin: 0;
+}
+
+.editor-cabecera .subtitulo {
+  margin: 0.4rem 0 0 0;
+}
+
+.editor-botones {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* los dos estilos de boton del editor: el suave para agregar mesas
+   y el de acento para guardar, que es el importante */
+.boton-suave,
+.boton-acento {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+.boton-suave {
+  background: var(--superficie);
+  color: var(--acento);
+  border: 1px solid var(--borde);
+}
+
+.boton-acento {
+  background: var(--acento);
+  color: var(--texto-sobre-acento);
+  border: 1px solid var(--acento);
+  font-weight: bold;
+}
+
+/* sin cambios para guardar el boton queda apagado */
+.boton-acento:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.editor-panel h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 20px;
+}
+
+.etiqueta {
+  margin: 1rem 0 0.4rem 0;
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--texto-secundario);
+}
+
+.opciones {
+  display: flex;
+  gap: 0.4rem;
+}
+
+/* cada opcion es un boton. la que tiene la mesa ahora esta disabled,
+   asi que esa es la que se pinta como elegida */
+.opcion {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background: var(--superficie-suave);
+  color: var(--texto);
+  font-size: 14px;
+}
+
+.opcion:disabled {
+  background: var(--acento-suave);
+  border-color: var(--acento);
+  color: var(--acento);
+  font-weight: bold;
+  cursor: default;
+}
+
+.boton-borrar {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 0.6rem;
+  border: 1px solid var(--llamando);
+  border-radius: 8px;
+  background: none;
+  color: var(--llamando);
+  font-size: 14px;
+}
+
+.sin-elegir {
+  margin: 0;
+  font-size: 14px;
+  color: var(--texto-ayuda);
+}
+
+/* el panel del encargado en modo claro va con la paleta arena y petroleo,
+   la que se eligio en el figma. en oscuro queda la de siempre */
+   :root:not([data-theme="oscuro"]) body.arena {
+    --fondo-pantalla: #f6f3ed;
+    --superficie: #fffdf9;
+    --superficie-suave: #eee8dd;
+    --borde: #e0d8c9;
+    --texto: #23292a;
+    --texto-secundario: #6b6557;
+    --texto-ayuda: #2b6168;
+    --acento: #22585f;
+    --acento-suave: #e1ecec;
+    --ocupada: #0f8a5f;
+    --llamando: #cf3a2f;
+    --llamando-suave: #fbeeec;
+  }
+  
+  /* la lista va en una columna al medio, como en el figma */
+  .panel-encargado {
+    width: 50vw;
+    margin: 0 auto;
+  }
+  
+  .titulo-llamados {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .titulo-llamados h1 {
+    margin: 0;
+    font-size: 32px;
+  }
+  
+  .cantidad {
+    background: var(--llamando);
+    color: var(--texto-sobre-color);
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  .subtitulo {
+    margin: 0.75rem 0 1.25rem 0;
+    font-size: 14px;
+    color: var(--texto-ayuda);
+  }
+  
+  .lista-llamados {
+    background: var(--superficie);
+    border: 1px solid var(--borde);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  
+  .sin-llamados {
+    margin: 0;
+    padding: 1.25rem;
+    color: var(--texto-secundario);
+  }
+  
+  /* un renglon por llamado. lo usan el panel y la columna del mozo */
+  .llamado {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--borde);
+  }
+  
+  .llamado:last-child {
+    border-bottom: none;
+  }
+  
+  .llamado strong {
+    font-size: 18px;
+  }
+  
+  .llamado .motivo {
+    color: var(--texto-secundario);
+  }
+  
+  /* el "hace X min" y el ✓ se van a la derecha */
+  .llamado .espera {
+    margin-left: auto;
+    font-size: 14px;
+    color: var(--texto-secundario);
+  }
+  
+  .boton-atender {
+    display: flex;
+    padding: 0.6rem;
+    border: none;
+    border-radius: 8px;
+    background: var(--ocupada);
+    color: var(--texto-sobre-color);
+  }
+  
+  .boton-atender svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
