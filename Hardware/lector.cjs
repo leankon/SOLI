@@ -18,7 +18,7 @@ puerto.on("open", () => {
 
 
 const API = "https://soli-olive.vercel.app";
-const ID_MESA = 1;
+const ID_MESA = 6;
 const TIPOS = ["mozo", "cuenta", "pan", "menu", "cancelar"];
 
 let prioridadHasta = 0;
@@ -46,7 +46,7 @@ lector.on("data", async (linea) => {
     const datos = await respuesta.json();
     console.log("Enviado:", tipo, prioridad ? "(PRIORIDAD)" : "", "→", respuesta.status, datos);
   } catch (err) {
-    console.error("No se pudo mandar al back:", err.message);
+    console.error("No se pudo mandar al back:", err.message, err.cause?.code, err.cause?.message);
   }
 });
 
