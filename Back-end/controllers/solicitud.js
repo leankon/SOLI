@@ -30,7 +30,7 @@ const createSolicitud = async (req, res) => {
     const result = await pool.query(
       `INSERT INTO solicitud (tipo, id_mesa , estado, fecha, hora,prioridad)
        VALUES ($1, $2,'pendiente', CURRENT_DATE, CURRENT_TIME, $3) RETURNING *`,
-      [ tipo,id_mesa,prioridad ]
+      [ tipo,id_mesa,prioridad === true ]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {

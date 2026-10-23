@@ -2,7 +2,7 @@ import { pool } from "../db.js";
 
 const getMesas = async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM mesa ORDER BY id");
+    const result = await pool.query("SELECT * FROM mesa WHERE id_usuario = $1 ORDER BY id", [req.usuario.cuenta]);
     res.json(result.rows);
   } catch (err) {
     console.error(err);
@@ -28,9 +28,9 @@ const createMesa = async (req, res) => {
   try {
     const { numero, estado, x, y, tamano, forma , lugares } = req.body;
     const result = await pool.query(
-      `INSERT INTO mesa (numero, estado, x, y, tamano, forma , lugares)
-       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-      [numero, estado, x, y, tamano, forma , lugares]
+      `INSERT INTO mesa (numero, estado, x, y, tamano, forma , lugares,id_usuario)
+       VALUES ($1, $2, $3, $4, $5, $6, $7,$8) RETURNING *`,
+      [numero, estado, x, y, tamano, forma , lugares, id_usuario]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {

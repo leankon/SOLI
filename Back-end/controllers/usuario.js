@@ -89,7 +89,15 @@ try{
  }
  const usuario =respuesta.rows[0];
 
-  const payload= {id: usuario.id, rol:usuario.rol};
+
+ const resCuenta = await pool.query(
+  "SELECT id FROM usuario WHERE nombre_usuario = $1 AND rol = 'encargado' ORDER BY id LIMIT 1",
+  [email]
+);
+const cuenta = resCuenta.rows.length > 0 ? resCuenta.rows[0].id : usuario.id;
+
+ 
+  const payload= {id: usuario.id, rol:usuario.rol, cuenta: cuenta};
   const secretKey = process.env.JWT_SECRET;
   const options = {expiresIn: '8h'};
   const token = jwt.sign  (payload,secretKey, options);
