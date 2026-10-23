@@ -129,61 +129,94 @@ export default function Catalogo() {
   return (
     <div>
       <h1>Catalogo de platos</h1>
+      <p className="subtitulo">Lo que el mozo puede agregar a la cuenta de una mesa.</p>
 
-      <p>
-        <input
-          type="text"
-          placeholder="Nombre del plato"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-        />
-        <input
-          type="number"
-          placeholder="Precio"
-          value={precio}
-          onChange={(e) => setPrecio(e.target.value)}
-        />
-        <button type="button" onClick={agregar}>Agregar</button>
-      </p>
+      <div className="catalogo">
+        <div className="tabla">
+          <div className="fila fila-titulos">
+            <span>Plato</span>
+            <span>Precio</span>
+            <span />
+          </div>
 
-      {cargando ? (
-        <p>Buscando los platos...</p>
-      ) : listaPlatos.length === 0 ? (
-        <p>Todavia no hay platos cargados.</p>
-      ) : (
-        listaPlatos.map((plato) =>
-          plato.id === idEditando ? (
-            <p key={plato.id}>
-              <input
-                type="text"
-                value={nombreEditado}
-                onChange={(e) => setNombreEditado(e.target.value)}
-              />
-              <input
-                type="number"
-                value={precioEditado}
-                onChange={(e) => setPrecioEditado(e.target.value)}
-              />
-              <button type="button" onClick={() => guardarEdicion(plato.id)}>
-                Guardar
-              </button>{' '}
-              <button type="button" onClick={() => setIdEditando(null)}>
-                Cancelar
-              </button>
-            </p>
+          {cargando ? (
+            <p className="tabla-aviso">Buscando los platos...</p>
+          ) : listaPlatos.length === 0 ? (
+            <p className="tabla-aviso">Todavia no hay platos cargados. Agrega el primero desde el costado.</p>
           ) : (
-            <p key={plato.id}>
-              {plato.nombre} — {plata(plato.precio)}{' '}
-              <button type="button" onClick={() => empezarAEditar(plato)}>
-                Editar
-              </button>{' '}
-              <button type="button" onClick={() => borrar(plato.id)}>
-                Borrar
-              </button>
-            </p>
-          )
-        )
-      )}
+            listaPlatos.map((plato) =>
+              plato.id === idEditando ? (
+                <div className="fila fila-editando" key={plato.id}>
+                  <input
+                    className="campo"
+                    type="text"
+                    value={nombreEditado}
+                    onChange={(e) => setNombreEditado(e.target.value)}
+                  />
+                  <input
+                    className="campo"
+                    type="number"
+                    value={precioEditado}
+                    onChange={(e) => setPrecioEditado(e.target.value)}
+                  />
+                  <div className="acciones">
+                    <button type="button" className="boton-chico boton-chico-acento" onClick={() => guardarEdicion(plato.id)}>
+                      Guardar
+                    </button>
+                    <button type="button" className="boton-chico" onClick={() => setIdEditando(null)}>
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="fila" key={plato.id}>
+                  <span className="nombre">{plato.nombre}</span>
+                  <span className="precio">{plata(plato.precio)}</span>
+                  <div className="acciones">
+                    <button type="button" className="boton-chico" onClick={() => empezarAEditar(plato)}>
+                      Editar
+                    </button>
+                    <button type="button" className="boton-chico boton-chico-peligro" onClick={() => borrar(plato.id)}>
+                      Borrar
+                    </button>
+                  </div>
+                </div>
+              )
+            )
+          )}
+        </div>
+
+        <div className="panel-costado">
+          <h2>Nuevo plato</h2>
+
+          <p className="etiqueta">Nombre</p>
+          <input
+            className="campo"
+            type="text"
+            placeholder="Ej: Milanesa con papas"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+          />
+
+          <p className="etiqueta">Precio</p>
+          <input
+            className="campo"
+            type="number"
+            placeholder="Ej: 8500"
+            value={precio}
+            onChange={(e) => setPrecio(e.target.value)}
+          />
+
+          <button
+            type="button"
+            className="boton-acento boton-ancho"
+            onClick={agregar}
+            disabled={nombre === '' || precio === ''}
+          >
+            Agregar plato
+          </button>
+        </div>
+      </div>
     </div>
   )
 }

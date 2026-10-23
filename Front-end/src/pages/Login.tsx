@@ -62,29 +62,43 @@ export default function Login() {
   }
 
   return (
-    <div>
-      <h1>SOLI</h1>
-      <p>Iniciar sesion</p>
+    <div className="login">
+      <form className="tarjeta-login" onSubmit={entrar}>
+        <div>
+          <p className="logo">SOLI</p>
+          <p className="login-bajada">Entra para ver el salon</p>
+        </div>
 
-      <form onSubmit={entrar}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit" disabled={entrando}>
+        <div>
+          <p className="etiqueta">Email</p>
+          <input
+            className="campo"
+            type="email"
+            placeholder="nombre@restaurante.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+
+        <div>
+          <p className="etiqueta">Contraseña</p>
+          <input
+            className="campo"
+            type="password"
+            placeholder="Tu contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+
+        {error && <p className="error-login">{error}</p>}
+
+        <button type="submit" className="boton-acento" disabled={entrando}>
           {entrando ? 'Entrando...' : 'Entrar'}
         </button>
-      </form>
 
-      {error && <p>{error}</p>}
+        <p className="login-pie">El encargado crea las cuentas de los mozos desde "Crear rol".</p>
+      </form>
     </div>
   )
 }
