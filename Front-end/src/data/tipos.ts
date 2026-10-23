@@ -11,6 +11,7 @@ export type Mesa = {
   // cuantas personas entran. va con ? porque la base todavia no tiene
   // esta columna: las mesas que vienen del back llegan sin ella
   lugares?: number
+  prioridad: boolean
 }
 //number es basicamente aca va un numero, que seria el id, el numero de pesa, y la posicion. 
 
