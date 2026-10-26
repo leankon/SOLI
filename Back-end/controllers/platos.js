@@ -41,10 +41,10 @@ const createPlato = async (req, res) => {
 const updatePlato = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre, precio, id_usuario } = req.body;
+    const { nombre, precio} = req.body;
     const result = await pool.query(
       "UPDATE platos SET nombre = $1, precio = $2, id_usuario = $3 WHERE id = $4 RETURNING *",
-      [nombre, precio, id_usuario, id]
+      [nombre, precio, req.usuario.cuenta, id]
     );
     if (result.rows.length === 0) {
       return res.status(404).json({ error: "Plato no encontrado" });
