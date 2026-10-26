@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
-import type { Mesa as DatosMesa, EstadoMesa, Solicitud } from '../data/tipos'
+import type { Mesa as DatosMesa, EstadoMesa, Solicitud, LineaPedido } from '../data/tipos'
 import { API } from '../data/constantes'
 import { useSesion } from '../context/SesionContext'
 import Mesa from '../components/mesa'
 import Llamado from '../components/Llamados'
 import PopUp from '../components/PopUp'
 import Cuenta from '../components/Cuenta'
+import ConfirmarLiberar from '../components/ConfirmarLiberar'
 
 export default function VistaMozo() {
   // los headers con el token de quien entro
@@ -23,6 +24,10 @@ export default function VistaMozo() {
 
   // cual ventana esta abierta sobre esa mesa: el pop up o la cuenta
   const [verCuenta, setVerCuenta] = useState(false)
+
+  // si quieren liberar una mesa con platos, aca guardo cual y que tiene,
+  // para mostrar el cartel antes de borrar nada. null es que no hay cartel
+  const [aLiberar, setALiberar] = useState<{ id: number; lineas: LineaPedido[] } | null>(null)
 
   useEffect(() => {
     const traer = async () => {
@@ -136,20 +141,34 @@ export default function VistaMozo() {
       }
       const lineas = await response.json()
 
+      // con platos no libero todavia: primero pregunto con el cartel
       if (lineas.length > 0) {
-        const seguro = confirm(
-          'La mesa tiene ' + lineas.length + ' platos en la cuenta. ¿Borrar los platos y liberar la mesa?'
-        )
-        if (!seguro) return
+        setALiberar({ id: id, lineas: lineas })
+        return
+      }
+    } catch (error) {
+      console.error('Hubo un error:', error)
+      alert('No se pudo revisar la cuenta. Fijate la conexion.')
+      return
+    }
 
-        for (const linea of lineas) {
-          const borrado = await fetch(API + '/pide/' + linea.id, {
-            method: 'DELETE',
-            headers: cabeceras(),
-          })
-          if (!borrado.ok) {
-            throw new Error('Error al borrar un plato de la cuenta')
-          }
+    cambiarEstado(id, 'vacia')
+  }
+
+  // apretaron "Borrar platos y liberar" en el cartel
+  const borrarYLiberar = async () => {
+    if (aLiberar === null) return
+    const { id, lineas } = aLiberar
+    setALiberar(null)
+
+    try {
+      for (const linea of lineas) {
+        const response = await fetch(API + '/pide/' + linea.id, {
+          method: 'DELETE',
+          headers: cabeceras(),
+        })
+        if (!response.ok) {
+          throw new Error('Error al borrar un plato de la cuenta')
         }
       }
     } catch (error) {
@@ -204,13 +223,18 @@ export default function VistaMozo() {
           ) : (
             // sin onAtender no dibuja el boton: el mozo mira, el encargado apaga
             pendientes.map((s) => (
-              <Llamado key={s.id} solicitud={s} numeroMesa={numeroDeMesa(s.id_mesa)} />
+              <Llamado
+                key={s.id}
+                solicitud={s}
+                numeroMesa={numeroDeMesa(s.id_mesa)}
+                prioridad={s.prioridad}
+              />
             ))
           )}
         </div>
       </div>
 
-      {mesaSeleccionada && !verCuenta && (
+      {mesaSeleccionada && !verCuenta && aLiberar === null && (
         <PopUp
           mesa={mesaSeleccionada}
           llamados={pendientes.filter((s) => s.id_mesa === mesaSeleccionada.id)}
@@ -223,6 +247,15 @@ export default function VistaMozo() {
 
       {mesaSeleccionada && verCuenta && (
         <Cuenta mesa={mesaSeleccionada} onCerrar={cerrarTodo} />
+      )}
+
+      {mesaSeleccionada && aLiberar !== null && (
+        <ConfirmarLiberar
+          numeroMesa={mesaSeleccionada.numero}
+          lineas={aLiberar.lineas}
+          onConfirmar={borrarYLiberar}
+          onCancelar={() => setALiberar(null)}
+        />
       )}
     </div>
   )
