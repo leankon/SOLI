@@ -2,7 +2,7 @@ import { pool } from "../db.js";
 
 const getPlatos = async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM platos ORDER BY id");
+    const result = await pool.query("SELECT * FROM platos WHERE id_usuario =$1 ORDER BY id", [req.usuario.cuenta]);
     res.json(result.rows);
   } catch (err) {
     console.error(err);
@@ -26,10 +26,10 @@ const getPlato = async (req, res) => {
 
 const createPlato = async (req, res) => {
   try {
-    const { nombre, precio, id_usuario } = req.body;
+    const { nombre, precio} = req.body;
     const result = await pool.query(
       "INSERT INTO platos (nombre, precio, id_usuario) VALUES ($1, $2, $3) RETURNING *",
-      [nombre, precio, id_usuario]
+      [nombre, precio, req.usuario.cuenta]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -41,10 +41,10 @@ const createPlato = async (req, res) => {
 const updatePlato = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre, precio, id_usuario } = req.body;
+    const { nombre, precio} = req.body;
     const result = await pool.query(
       "UPDATE platos SET nombre = $1, precio = $2, id_usuario = $3 WHERE id = $4 RETURNING *",
-      [nombre, precio, id_usuario, id]
+      [nombre, precio, req.usuario.cuenta, id]
     );
     if (result.rows.length === 0) {
       return res.status(404).json({ error: "Plato no encontrado" });
