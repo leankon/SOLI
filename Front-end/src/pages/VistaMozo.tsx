@@ -57,7 +57,7 @@ export default function VistaMozo() {
 
     // y despues cada tres segundos: asi el llamado nuevo aparece solo,
     // sin que el mozo tenga que apretar F5
-    const reloj = setInterval(traer, 3000)
+    const reloj = setInterval(traer, 1000)
 
     // cuando el mozo se va a otra pantalla apago el reloj. si no, sigue
     // preguntando para siempre aunque ya nadie este mirando
