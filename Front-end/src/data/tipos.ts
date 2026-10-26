@@ -11,7 +11,6 @@ export type Mesa = {
   // cuantas personas entran. va con ? porque la base todavia no tiene
   // esta columna: las mesas que vienen del back llegan sin ella
   lugares?: number
-  prioridad: boolean
 }
 //number es basicamente aca va un numero, que seria el id, el numero de pesa, y la posicion. 
 
@@ -33,6 +32,7 @@ export type Solicitud = {
   id_usuario: number
   // ojo: es el id de la mesa en la base, no el numero que ve el cliente
   id_mesa: number
+  prioridad: boolean
 }
 
 export type Plato = {

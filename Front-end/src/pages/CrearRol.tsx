@@ -21,7 +21,6 @@ export default function CrearRol() {
   const [cargando, setCargando] = useState(true)
   const [nombre, setNombre] = useState('')
   const [apellido, setApellido] = useState('')
-  const [dni, setDni] = useState('')
   const [rol, setRol] = useState<Rol>('mozo')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -51,7 +50,6 @@ export default function CrearRol() {
         body: JSON.stringify({
           nombre: nombre,
           apellido: apellido,
-          dni: dni,
           // todos entran con el mismo email: lo que cambia es la contrasena
           nombre_usuario: miEmail,
           // con n porque asi la lee hoy el back. si martin la pasa a
@@ -71,7 +69,6 @@ export default function CrearRol() {
 
       setNombre('')
       setApellido('')
-      setDni('')
       setPassword('')
       setError('')
     } catch (error) {
@@ -152,10 +149,6 @@ export default function CrearRol() {
 
           <p className="etiqueta">Apellido</p>
           <input className="campo" value={apellido} onChange={(e) => setApellido(e.target.value)} />
-
-          <p className="etiqueta">DNI</p>
-          <input className="campo" value={dni} onChange={(e) => setDni(e.target.value)} />
-
           <p className="etiqueta">Rol</p>
           <div className="opciones">
             {/* la que esta elegida queda disabled y el css la pinta */}

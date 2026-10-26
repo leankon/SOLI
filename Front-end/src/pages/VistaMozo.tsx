@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type { Mesa as DatosMesa, EstadoMesa, Solicitud } from '../data/tipos'
 import { API } from '../data/constantes'
 import { useSesion } from '../context/SesionContext'
@@ -14,6 +14,10 @@ export default function VistaMozo() {
   const [solicitudes, setSolicitudes] = useState<Solicitud[]>([])
   const [cargando, setCargando] = useState(true)
 
+  // cuando termino el ultimo cambio que hice yo. una lista que el reloj
+  // pidio antes de eso viene vieja y me volveria la mesa a como estaba
+  const ultimoCambio = useRef(0)
+
   // arranca en null porque al principio no hay ninguna mesa elegida.
   const [idSeleccionada, setIdSeleccionada] = useState<number | null>(null)
 
@@ -22,12 +26,17 @@ export default function VistaMozo() {
 
   useEffect(() => {
     const traer = async () => {
+      const pedidoEn = Date.now()
       try {
         // pido las dos juntas: el plano sale de las mesas y los llamados de
         // las solicitudes, que son tablas distintas
         const [datosMesas, datosSolicitudes] = await Promise.all([
-          fetch(API + '/mesas', { headers: cabeceras() }).then((r) => r.json()),     
-          fetch(API + '/solicitudes', { headers: cabeceras() }).then((r) => r.json()),])
+          fetch(API + '/mesas', { headers: cabeceras() }).then((r) => r.json()),
+          fetch(API + '/solicitudes', { headers: cabeceras() }).then((r) => r.json()),
+        ])
+
+        // si mientras viajaba la lista yo cambie algo, esta lista es vieja
+        if (pedidoEn < ultimoCambio.current) return
 
         setListaMesas(datosMesas)
         setSolicitudes(datosSolicitudes)
@@ -94,6 +103,7 @@ export default function VistaMozo() {
     const antes = listaMesas
 
     // la pinto ya, sin esperar la respuesta, asi el mozo no ve el tilde
+    ultimoCambio.current = Date.now()
     setListaMesas(listaMesas.map((m) => (m.id === id ? actualizada : m)))
 
     try {
@@ -112,6 +122,43 @@ export default function VistaMozo() {
       setListaMesas(antes)
       alert('No se pudo guardar el cambio. Fijate la conexion.')
     }
+
+    // ya se guardo: lo que el reloj haya pedido hasta aca no sirve
+    ultimoCambio.current = Date.now()
+  }
+
+  const liberar = async (id: number) => {
+    try {
+      // antes de liberar me fijo si la cuenta tiene platos
+      const response = await fetch(API + '/mesas/' + id + '/pedido', { headers: cabeceras() })
+      if (!response.ok) {
+        throw new Error('Error al traer la cuenta')
+      }
+      const lineas = await response.json()
+
+      if (lineas.length > 0) {
+        const seguro = confirm(
+          'La mesa tiene ' + lineas.length + ' platos en la cuenta. ¿Borrar los platos y liberar la mesa?'
+        )
+        if (!seguro) return
+
+        for (const linea of lineas) {
+          const borrado = await fetch(API + '/pide/' + linea.id, {
+            method: 'DELETE',
+            headers: cabeceras(),
+          })
+          if (!borrado.ok) {
+            throw new Error('Error al borrar un plato de la cuenta')
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Hubo un error:', error)
+      alert('No se pudo vaciar la cuenta. Fijate la conexion.')
+      return
+    }
+
+    cambiarEstado(id, 'vacia')
   }
 
   function cerrarTodo() {
@@ -167,7 +214,8 @@ export default function VistaMozo() {
         <PopUp
           mesa={mesaSeleccionada}
           llamados={pendientes.filter((s) => s.id_mesa === mesaSeleccionada.id)}
-          onCambiarEstado={cambiarEstado}
+          // liberar pasa primero por la cuenta, ocupar va directo
+          onCambiarEstado={(id, nuevo) => (nuevo === 'vacia' ? liberar(id) : cambiarEstado(id, nuevo))}
           onCerrar={cerrarTodo}
           onCuenta={() => setVerCuenta(true)}
         />
