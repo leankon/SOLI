@@ -23,18 +23,18 @@ type Props = {
 }
 
 export default function PopUp({ mesa, llamados, onCambiarEstado, onCerrar, onCuenta }: Props) {
-  const aLaVista = llamados.slice(0, FRANJAS_VISIBLES)
+  // los de prioridad primero. entre los que empatan, sort deja el orden de llegada
+  const ordenados = [...llamados].sort((a, b) => (b.prioridad ? 1 : 0) - (a.prioridad ? 1 : 0))
+  const aLaVista = ordenados.slice(0, FRANJAS_VISIBLES)
   const resto = llamados.length - aLaVista.length
 
   return (
     <div className="fondo-oscuro">
       <div className="popup">
-        {aLaVista.map((s, i) => (
+        {aLaVista.map((s) => (
           <div key={s.id} className="franja-llamado">
             <span className="motivo">Pide: {TEXTO_MOTIVO[s.tipo] || s.tipo}</span>
-            {/* la lista viene en orden de llegada, asi que el primero es el
-                que hace mas rato que espera */}
-            {i === 0 && <span className="chapa-prioridad">Prioridad</span>}
+            {s.prioridad && <span className="chapa-prioridad">Prioridad</span>}
             <span className="espera">{esperaDe(s)}</span>
           </div>
         ))}
@@ -70,7 +70,7 @@ export default function PopUp({ mesa, llamados, onCambiarEstado, onCerrar, onCue
               <button type="button" className="boton-principal" onClick={onCuenta}>
                 Ver la cuenta
               </button>
-              <p className="ayuda">Liberar la mesa no borra lo que pidieron.</p>
+              <p className="ayuda">Si la cuenta tiene platos, te pregunta antes de borrarlos.</p>
               <button
                 type="button"
                 className="boton-peligro"

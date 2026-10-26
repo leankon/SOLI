@@ -20,6 +20,11 @@ export default function PanelEncargado() {
     document.body.classList.add('arena')
     return () => document.body.classList.remove('arena')
   }, [])
+
+  // los llamados que ya toque con ✓. el reloj puede traer una lista vieja,
+  // de antes de que se guarde, y sin esto el llamado vuelve a aparecer
+  const [apagados, setApagados] = useState<number[]>([])
+
   useEffect(() => {
     function traer() {
       // pido las dos cosas de una. necesito las mesas porque la solicitud
@@ -46,7 +51,13 @@ export default function PanelEncargado() {
   }, [])
 
   // las atendidas quedan en la base con otro estado, no se borran
-  const pendientes = solicitudes.filter((s) => s.estado === 'pendiente')
+  const pendientes = solicitudes.filter(
+    (s) => s.estado === 'pendiente' && !apagados.includes(s.id)
+  )
+
+  // los de prioridad arriba de todo. entre los que empatan, sort deja el
+  // orden de llegada, asi el resto sigue del mas viejo al mas nuevo
+  const ordenados = [...pendientes].sort((a, b) => (b.prioridad ? 1 : 0) - (a.prioridad ? 1 : 0))
 
   function numeroDeMesa(idMesa: number) {
     const mesa = listaMesas.find((m) => m.id === idMesa)
@@ -55,10 +66,8 @@ export default function PanelEncargado() {
   }
 
   const atender = async (id: number) => {
-    const antes = solicitudes
-
     // la saco de la pantalla ya, sin esperar la respuesta
-    setSolicitudes(solicitudes.map((s) => (s.id === id ? { ...s, estado: 'atendida' } : s)))
+    setApagados((lista) => [...lista, id])
 
     try {
       const response = await fetch(API + '/solicitudes/' + id, {
@@ -74,7 +83,7 @@ export default function PanelEncargado() {
     } catch (error) {
       console.error('Hubo un error:', error)
       // vuelvo atras: si no se guardo, la mesa sigue esperando
-      setSolicitudes(antes)
+      setApagados((lista) => lista.filter((x) => x !== id))
       alert('No se pudo apagar el llamado. Fijate la conexion.')
     }
   }
@@ -97,20 +106,20 @@ export default function PanelEncargado() {
         )}
       </div>
       <p className="subtitulo">
-        Arriba el que hace mas rato que espera. Con ✓ el llamado se apaga para todos.
+        Los de prioridad van arriba de todo. El resto, del mas viejo al mas nuevo. Con ✓ el llamado se apaga para todos.
       </p>
 
       <div className="lista-llamados">
         {pendientes.length === 0 ? (
           <p className="sin-llamados">No hay llamados. Todo tranquilo.</p>
         ) : (
-          pendientes.map((solicitud, i) => (
+          ordenados.map((solicitud) => (
             <Llamado
               key={solicitud.id}
               solicitud={solicitud}
               numeroMesa={numeroDeMesa(solicitud.id_mesa)}
               onAtender={atender}
-              prioridad={i === 0}
+              prioridad={solicitud.prioridad}
             />
           ))
         )}
