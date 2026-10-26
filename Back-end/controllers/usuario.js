@@ -4,8 +4,8 @@ import jwt from "jsonwebtoken";
 const getUsuarios = async (req, res) => {
   try {
     const result = await pool.query(
-      "SELECT id, nombre, apellido, dni, nombre_usuario, rol FROM usuario ORDER BY id"
-    );
+      "SELECT id, nombre, apellido, dni, nombre_usuario, rol FROM usuario WHERE nombre_usuario = (SELECT nombre_usuario FROM usuario WHERE id = $1) ORDER BY id",
+[req.usuario.cuenta] );
     res.json(result.rows);
   } catch (err) {
     console.error(err);

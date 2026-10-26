@@ -2,7 +2,10 @@ import { pool } from "../db.js";
 
 const getSolicitudes = async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM solicitud ORDER BY id");
+    const result = await pool.query(
+      "SELECT s.* FROM solicitud s JOIN mesa m ON s.id_mesa = m.id WHERE m.id_usuario = $1 ORDER BY s.id",
+      [req.usuario.cuenta]
+    );
     res.json(result.rows);
   } catch (err) {
     console.error(err);
