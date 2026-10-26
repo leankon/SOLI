@@ -137,3 +137,25 @@
   color: var(--llamando);
   border: 1px solid var(--llamando);
 }
+
+/* el cartel de liberar una mesa con platos: borrar es lo peligroso,
+   por eso va lleno de rojo. cancelar queda suave */
+   .boton-confirmar-peligro,
+   .boton-cancelar {
+     padding: 0.9rem;
+     border-radius: 8px;
+     font-size: 16px;
+   }
+   
+   .boton-confirmar-peligro {
+     background: var(--llamando);
+     color: var(--texto-sobre-color);
+     border: none;
+     font-weight: bold;
+   }
+   
+   .boton-cancelar {
+     background: var(--superficie);
+     color: var(--acento);
+     border: 1px solid var(--borde);
+   }
