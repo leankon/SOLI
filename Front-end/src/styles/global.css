@@ -31,8 +31,8 @@
        76vw, asi que se ve igual en el editor y en el mozo y llena la pantalla */
     /* la mas chica entre "entra a lo ancho" y "entra a lo alto", asi el
        plano nunca se pasa de la pantalla. 13rem es la barra y el titulo */
-       --u: min(calc(76vw / 1300), calc((100vh - 13rem) / 700));  }
-  
+       --u: min(calc(76vw / 1800), calc((100vh - 13rem) / 700));
+  }  
   /* modo oscuro: los mismos nombres con otros colores. el boton de la
      luna le pone data-theme="oscuro" al html y todo cambia solo */
   :root[data-theme="oscuro"] {
@@ -154,8 +154,8 @@
      y no desde la esquina de la pantalla */
   .plano {
     position: relative;
-    width: calc(1300 * var(--u));
-        height: calc(700 * var(--u));
+    width: calc(1800 * var(--u));
+    height: calc(700 * var(--u));
     border: 1px solid var(--borde);
     border-radius: 14px;
     background: var(--superficie);
