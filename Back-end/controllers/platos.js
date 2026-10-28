@@ -1,10 +1,11 @@
 import { pool } from "../db.js";
+import platosService from "../services/platos.service.js";
 
-const getPlatos = async (req, res) => {
-  try {
-    const result = await pool.query("SELECT * FROM platos WHERE id_usuario =$1 ORDER BY id", [req.usuario.cuenta]);
-    res.json(result.rows);
-  } catch (err) {
+  const getPlatos = async (req, res) => {
+    try {
+      const result = await pool.query("SELECT * FROM platos WHERE id_usuario =$1 ORDER BY id", [req.usuario.cuenta]);
+      res.json(result.rows);
+    } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error al obtener los platos" });
   }

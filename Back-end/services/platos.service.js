@@ -1,11 +1,8 @@
 import { pool } from "../db.js";
 
-const ObtenerPlatos =  async (req,res)=>{
+const obtenerPlatos = async (cuenta) => {
+  const result = await pool.query("SELECT * FROM platos WHERE id_usuario = $1 ORDER BY id", [cuenta]);
+  return result.rows;
+};
 
-const result = await pool.query(    )
-
-
-
-
-
-}
+export default { obtenerPlatos };
