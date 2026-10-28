@@ -1,5 +1,5 @@
   import express from "express";
-  import verificarToken from "../Middleweares/auth.js";
+  import verificarToken from "../middlewares/auth.js";
 
     import mesas from "../controllers/mesa.js";
     import platos from "../controllers/platos.js";
