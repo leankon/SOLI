@@ -1,13 +1,24 @@
   import express from "express";
   import cors from "cors";
-  import router from "./Routes/routes.js";
+  
+  import mesasRouter from "./Routes/routes.mesa.js";
+  import platosRouter from "./Routes/routes.plato.js";
+  import solicitudesRouter from "./Routes/routes.solicitud.js";
+  import usuariosRouter from "./Routes/routes.usuario.js";
+  import pideRouter from "./Routes/routes.pide.js";
+
   const app = express();
   const port = 3000;
 
 
   app.use(cors());
   app.use(express.json());
-  app.use(router);
+
+  app.use("/mesas", mesasRouter);
+  app.use(platosRouter);
+  app.use(solicitudesRouter);
+  app.use(usuariosRouter);
+  app.use(pideRouter);
 
   app.get("/", (_, res) => {
     res.send("SOLI API working!");
