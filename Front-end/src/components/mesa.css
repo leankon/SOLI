@@ -45,8 +45,9 @@
   border-color: var(--acento);
   border-width: 3px;
   color: var(--acento);
+  /* un poquito de sombra para que se despegue del plano */
+  box-shadow: 0 calc(4 * var(--u)) calc(12 * var(--u)) rgba(0, 0, 0, 0.25);
 }
-
 /* la caja que contiene la mesa y sus sillas. es mas grande que la mesa
    porque las sillas sobresalen */
 .mesa-lugar {

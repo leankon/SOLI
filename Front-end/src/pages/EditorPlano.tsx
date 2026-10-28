@@ -289,12 +289,13 @@ export default function EditorPlano() {
               </div>
 
               <p className="etiqueta">Tamano</p>
-              <div className="opciones">
+              {/* en el figma van uno abajo del otro */}
+              <div className="opciones opciones-columna">
                 {TAMANOS.map((t) => (
                   <button
                     key={t.px}
                     type="button"
-                    className="opcion"
+                    className="opcion opcion-tamano"
                     onClick={() =>
                       cambiarMesa(elegida.id, {
                         tamano: t.px,
