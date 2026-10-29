@@ -175,7 +175,7 @@ export default function Catalogo() {
                   <div className="acciones">
                     <button type="button" className="boton-chico" onClick={() => empezarAEditar(plato)}>
                       Editar
-                    </button>
+                      </button>
                     <button type="button" className="boton-chico boton-chico-peligro" onClick={() => borrar(plato.id)}>
                       Borrar
                     </button>

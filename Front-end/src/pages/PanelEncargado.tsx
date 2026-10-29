@@ -43,7 +43,7 @@ export default function PanelEncargado() {
     traer()
 
     // y despues cada tres segundos: asi aparecen los llamados nuevos solos
-    const reloj = setInterval(traer, 1000)
+    const reloj = setInterval(traer, 1000 )
 
     // cuando el encargado se va a otra pantalla apago el reloj. si no,
     // sigue preguntando para siempre aunque ya nadie este mirando
