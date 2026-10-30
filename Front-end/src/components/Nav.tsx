@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { NavLink, Link } from 'react-router-dom'
-
+import Logo from './Logo'
 type Props = {
   rol: string
   nombre: string
@@ -22,8 +22,7 @@ export default function Nav({ rol, nombre, onSalir }: Props) {
 
   return (
     <nav>
-      <b className="marca">SOLI</b>
-
+<Logo className="marca" />
       <div className="links">
         {rol === 'mozo' ? (
           <NavLink to="/mozo">Mesas</NavLink>

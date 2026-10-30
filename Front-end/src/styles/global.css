@@ -94,9 +94,10 @@
   }
   
   nav .marca {
-    font-size: 22px;
+    display: block;
+    height: 1.6rem;
     color: var(--acento);
-  }
+  } 
   
   nav .links {
     flex: 1;
@@ -626,9 +627,8 @@
 }
 
 .logo {
-  margin: 0;
-  font-size: 40px;
-  font-weight: bold;
+  display: block;
+  height: 3rem;
   color: var(--acento);
 }
 

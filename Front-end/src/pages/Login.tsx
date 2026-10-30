@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { API } from '../data/constantes'
 import { useSesion } from '../context/SesionContext'
-
+import Logo from '../components/Logo'
 export default function Login() {
   // entrar guarda la persona y su token para toda la app
   const { entrar: guardarSesion } = useSesion()
@@ -65,8 +65,8 @@ export default function Login() {
     <div className="login">
       <form className="tarjeta-login" onSubmit={entrar}>
         <div>
-          <p className="logo">SOLI</p>
-          <p className="login-bajada">Entra para ver el salon</p>
+        <Logo className="logo" />
+         <p className="login-bajada">Entra para ver el salon</p>
         </div>
 
         <div>
