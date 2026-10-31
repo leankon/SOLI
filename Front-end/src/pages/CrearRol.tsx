@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import type { Rol } from '../data/tipos'
 import { API } from '../data/constantes'
 import { useSesion } from '../context/SesionContext'
+import { useAviso } from '../context/AvisoContext'
 
 // una persona como la devuelve GET /usuarios. la contraseña no viene
 type Persona = {
@@ -13,6 +14,7 @@ type Persona = {
 
 export default function CrearRol() {
   const { usuario, cabeceras } = useSesion()
+  const { avisar } = useAviso()
   // para no dejar que el encargado se borre a si mismo
   const miId = usuario === null ? 0 : usuario.id
   // los mozos que crea entran con su mismo email
@@ -97,7 +99,7 @@ export default function CrearRol() {
     } catch (error) {
       console.error('Hubo un error:', error)
       setLista(antes)
-      alert('No se pudo borrar. Fijate la conexion.')
+      avisar('No se pudo borrar', 'Fijate la conexion.')
     }
   }
 

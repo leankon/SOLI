@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import type { Mesa, Plato, LineaPedido } from '../data/tipos'
 import { API } from '../data/constantes'
 import { useSesion } from '../context/SesionContext'
+import { useAviso } from '../context/AvisoContext'
 import './PopUp.css'
 import './Cuenta.css'
 
@@ -18,6 +19,7 @@ type Props = {
 export default function Cuenta({ mesa, onCerrar }: Props) {
   // los headers con el token de quien entro
   const { cabeceras } = useSesion()
+  const { avisar } = useAviso()
   const [platos, setPlatos] = useState<Plato[]>([])
   const [lineas, setLineas] = useState<LineaPedido[]>([])
   const [cantidades, setCantidades] = useState<Record<number, number>>({})
@@ -83,7 +85,7 @@ export default function Cuenta({ mesa, onCerrar }: Props) {
       setCantidades({ ...cantidades, [plato.id]: 1 })
     } catch (error) {
       console.error('Hubo un error:', error)
-      alert('No se pudo agregar el plato. Fijate la conexion.')
+      avisar('No se pudo agregar el plato', 'Fijate la conexion.')
     }
   }
 
@@ -104,7 +106,7 @@ export default function Cuenta({ mesa, onCerrar }: Props) {
     } catch (error) {
       console.error('Hubo un error:', error)
       setLineas(antes)
-      alert('No se pudo sacar el plato. Fijate la conexion.')
+      avisar('No se pudo sacar el plato', 'Fijate la conexion.')
     }
   }
 

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import type { Mesa as DatosMesa, EstadoMesa, Solicitud, LineaPedido } from '../data/tipos'
 import { API } from '../data/constantes'
 import { useSesion } from '../context/SesionContext'
+import { useAviso } from '../context/AvisoContext'
 import Mesa from '../components/mesa'
 import Llamado from '../components/Llamados'
 import PopUp from '../components/PopUp'
@@ -11,6 +12,7 @@ import ConfirmarLiberar from '../components/ConfirmarLiberar'
 export default function VistaMozo() {
   // los headers con el token de quien entro
   const { cabeceras } = useSesion()
+  const { avisar } = useAviso()
   const [listaMesas, setListaMesas] = useState<DatosMesa[]>([])
   const [solicitudes, setSolicitudes] = useState<Solicitud[]>([])
   const [cargando, setCargando] = useState(true)
@@ -125,7 +127,7 @@ export default function VistaMozo() {
       console.error('Hubo un error:', error)
       // vuelvo atras: peor es mostrar una mesa libre que en la base sigue ocupada
       setListaMesas(antes)
-      alert('No se pudo guardar el cambio. Fijate la conexion.')
+      avisar('No se pudo guardar el cambio', 'Fijate la conexion.')
     }
 
     // ya se guardo: lo que el reloj haya pedido hasta aca no sirve
@@ -148,7 +150,7 @@ export default function VistaMozo() {
       }
     } catch (error) {
       console.error('Hubo un error:', error)
-      alert('No se pudo revisar la cuenta. Fijate la conexion.')
+      avisar('No se pudo revisar la cuenta', 'Fijate la conexion.')
       return
     }
 
@@ -173,7 +175,7 @@ export default function VistaMozo() {
       }
     } catch (error) {
       console.error('Hubo un error:', error)
-      alert('No se pudo vaciar la cuenta. Fijate la conexion.')
+      avisar('No se pudo vaciar la cuenta', 'Fijate la conexion.')
       return
     }
 

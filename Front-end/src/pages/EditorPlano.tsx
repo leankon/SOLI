@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import type { Mesa as DatosMesa } from '../data/tipos'
 import { API, tamano_MESA, ANCHO_PLANO, ALTO_PLANO } from '../data/constantes'
 import { useSesion } from '../context/SesionContext'
+import { useAviso } from '../context/AvisoContext'
 import Mesa from '../components/mesa'
 
 // la de 8 lugares solo entra en la grande
@@ -30,6 +31,7 @@ const PASO = tamano_MESA + 40
 export default function EditorPlano() {
   // quien esta adentro y los headers con su token
   const { usuario, cabeceras } = useSesion()
+  const { avisar } = useAviso()
   // hasta que el back lea el id del token lo sigo mandando en el body
   const idUsuario = usuario === null ? 0 : usuario.id
   const [listaMesas, setListaMesas] = useState<DatosMesa[]>([])
@@ -84,7 +86,7 @@ export default function EditorPlano() {
       setGuardadas(listaMesas)
     } catch (error) {
       console.error('Hubo un error:', error)
-      alert('No se pudo guardar el plano. Fijate la conexion y volve a apretar Guardar.')
+      avisar('No se pudo guardar el plano', 'Fijate la conexion y volve a apretar Guardar.')
     }
 
     setGuardando(false)
@@ -130,7 +132,7 @@ export default function EditorPlano() {
       setIdElegida(data.id)
     } catch (error) {
       console.error('Hubo un error:', error)
-      alert('No se pudo crear la mesa. Fijate la conexion.')
+      avisar('No se pudo crear la mesa', 'Fijate la conexion.')
     }
 
     setCreando(false)
@@ -153,7 +155,7 @@ export default function EditorPlano() {
       setIdElegida(null)
     } catch (error) {
       console.error('Hubo un error:', error)
-      alert('No se pudo borrar la mesa. Puede que tenga pedidos o llamados guardados.')
+      avisar('No se pudo borrar la mesa', 'Puede que tenga pedidos o llamados guardados.')
     }
   }
 

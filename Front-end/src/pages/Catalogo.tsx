@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import type { Plato } from '../data/tipos'
 import { API } from '../data/constantes'
 import { useSesion } from '../context/SesionContext'
+import { useAviso } from '../context/AvisoContext'
 
 // 8500 se lee mal. $8.500 se lee de un vistazo
 function plata(n: number) {
@@ -11,6 +12,7 @@ function plata(n: number) {
 export default function Catalogo() {
   // quien esta adentro y los headers con su token
   const { usuario, cabeceras } = useSesion()
+  const { avisar } = useAviso()
   // hasta que el back lea el id del token lo sigo mandando en el body
   const idUsuario = usuario === null ? 0 : usuario.id
   const [listaPlatos, setListaPlatos] = useState<Plato[]>([])
@@ -61,7 +63,7 @@ export default function Catalogo() {
       setPrecio('')
     } catch (error) {
       console.error('Hubo un error:', error)
-      alert('No se pudo agregar el plato. Fijate la conexion.')
+      avisar('No se pudo agregar el plato', 'Fijate la conexion.')
     }
   }
 
@@ -100,7 +102,7 @@ export default function Catalogo() {
     } catch (error) {
       console.error('Hubo un error:', error)
       setListaPlatos(antes)
-      alert('No se pudo guardar el cambio. Fijate la conexion.')
+      avisar('No se pudo guardar el cambio', 'Fijate la conexion.')
     }
   }
 
@@ -122,7 +124,7 @@ export default function Catalogo() {
       console.error('Hubo un error:', error)
       setListaPlatos(antes)
       // si ya lo pidieron en alguna cuenta, la base no deja borrarlo
-      alert('No se pudo borrar el plato. Puede que este en la cuenta de alguna mesa.')
+      avisar('No se pudo borrar el plato', 'Puede que este en la cuenta de alguna mesa.')
     }
   }
 

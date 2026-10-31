@@ -656,3 +656,47 @@
   font-size: 13px;
   color: var(--texto-ayuda);
 }
+/* el aviso de error de abajo, como el del figma "si no se pudo guardar".
+   va con los colores al reves de la pagina, asi resalta en claro y en oscuro */
+.aviso-error {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 90vw;
+  padding: 0.75rem 1.25rem;
+  border-radius: 6px;
+  background: var(--texto);
+  color: var(--superficie);
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.25);
+}
+
+.aviso-error p {
+  margin: 0;
+}
+
+.aviso-error-titulo {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.aviso-error-detalle {
+  margin-top: 0.15rem;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.aviso-error button {
+  flex-shrink: 0;
+  padding: 0.5rem 0.9rem;
+  border: none;
+  border-radius: 4px;
+  background: var(--superficie);
+  color: var(--texto);
+  font-size: 14px;
+  font-weight: bold;
+}

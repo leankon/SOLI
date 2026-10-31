@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react'
 import type { Solicitud, Mesa } from '../data/tipos'
 import { API } from '../data/constantes'
 import { useSesion } from '../context/SesionContext'
+import { useAviso } from '../context/AvisoContext'
 import Llamado from '../components/Llamados'
 
 export default function PanelEncargado() {
   // quien esta adentro y los headers con su token
   const { usuario, cabeceras } = useSesion()
+  const { avisar } = useAviso()
   // hasta que el back lea el id del token lo sigo mandando en el body
   const idUsuario = usuario === null ? 0 : usuario.id
 
@@ -84,7 +86,7 @@ export default function PanelEncargado() {
       console.error('Hubo un error:', error)
       // vuelvo atras: si no se guardo, la mesa sigue esperando
       setApagados((lista) => lista.filter((x) => x !== id))
-      alert('No se pudo apagar el llamado. Fijate la conexion.')
+      avisar('No se pudo apagar el llamado', 'Fijate la conexion.')
     }
   }
 
